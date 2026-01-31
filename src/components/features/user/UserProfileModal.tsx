@@ -37,7 +37,11 @@ import { useAuth } from '@/hooks/auth';
 // --- Store ---
 import { useAuthStore } from '@/store/authStore';
 // --- Utils ---
-import { getAvatarText, getAvatarClasses, getAvatarSizeClasses } from '@/utils/avatar';
+import {
+  getAvatarText,
+  getAvatarClasses,
+  getAvatarSizeClasses,
+} from '@/utils/avatar';
 
 // =================================================================================================
 // Type Definitions
@@ -58,7 +62,10 @@ const DISPLAY_NAME_MAX_LENGTH = 10;
 // Component
 // =================================================================================================
 
-export const UserProfileModal: FC<UserProfileModalProps> = ({ isOpen, onClose }) => {
+export const UserProfileModal: FC<UserProfileModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   // --- Hooks ---
   const { t, i18n } = useTranslation();
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
@@ -67,7 +74,10 @@ export const UserProfileModal: FC<UserProfileModalProps> = ({ isOpen, onClose })
   const { user } = useAuth();
 
   // --- Memoized Values ---
-  const dateLocale = useMemo(() => (i18n.language === 'zh' ? zhCN : enUS), [i18n.language]);
+  const dateLocale = useMemo(
+    () => (i18n.language === 'zh' ? zhCN : enUS),
+    [i18n.language]
+  );
   const currentDisplayName = user?.user_metadata?.display_name;
 
   // --- Side Effects ---
@@ -104,14 +114,18 @@ export const UserProfileModal: FC<UserProfileModalProps> = ({ isOpen, onClose })
     setIsEditingName(true);
   }, []);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setDisplayName(e.target.value);
-  }, []);
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setDisplayName(e.target.value);
+    },
+    []
+  );
 
   const formatDate = useCallback(
     (date: string | null) => {
       if (!date) return t('profile.createdAt.noRecord');
-      const formatString = i18n.language === 'zh' ? 'yyyy年MM月dd日 HH:mm' : 'MMM dd, yyyy HH:mm';
+      const formatString =
+        i18n.language === 'zh' ? 'yyyy年MM月dd日 HH:mm' : 'MMM dd, yyyy HH:mm';
       return format(new Date(date), formatString, { locale: dateLocale });
     },
     [dateLocale, i18n.language, t]
@@ -124,10 +138,17 @@ export const UserProfileModal: FC<UserProfileModalProps> = ({ isOpen, onClose })
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={t('profile.title')} maxWidth="md">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t('profile.title')}
+      maxWidth="md"
+    >
       {/* 头像和用户名区域 */}
       <div className="flex flex-col items-center mb-6">
-        <div className={`${getAvatarClasses()} ${getAvatarSizeClasses('lg')} mb-6`}>
+        <div
+          className={`${getAvatarClasses()} ${getAvatarSizeClasses('lg')} mb-6`}
+        >
           <span>{getAvatarText(user)}</span>
         </div>
         {/* 用户名编辑区域 */}
@@ -173,17 +194,21 @@ export const UserProfileModal: FC<UserProfileModalProps> = ({ isOpen, onClose })
                   {currentDisplayName || t('profile.displayName.set')}
                 </span>
                 {currentDisplayName && (
-                  <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-indigo-500 dark:from-indigo-400 to-purple-500 dark:to-purple-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></div>
+                  <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-zinc-500 dark:from-zinc-400 to-zinc-600 dark:to-zinc-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></div>
                 )}
               </div>
               <button
                 onClick={handleStartEdit}
                 className={`absolute -right-9 p-1.5 rounded-lg ${
                   currentDisplayName
-                    ? 'text-gray-400 dark:text-gray-600 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-700 opacity-0 group-hover:opacity-100'
-                    : 'text-indigo-500 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-900 opacity-100'
+                    ? 'text-gray-400 dark:text-gray-600 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-gray-700 opacity-0 group-hover:opacity-100'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 opacity-100'
                 }`}
-                title={currentDisplayName ? t('profile.displayName.edit') : t('profile.displayName.set')}
+                title={
+                  currentDisplayName
+                    ? t('profile.displayName.edit')
+                    : t('profile.displayName.set')
+                }
               >
                 <PencilIcon className="w-4 h-4" />
               </button>
@@ -207,7 +232,9 @@ export const UserProfileModal: FC<UserProfileModalProps> = ({ isOpen, onClose })
             <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
               {t('profile.email.label')}
             </div>
-            <div className="text-sm text-gray-900 dark:text-gray-100 mt-1">{user.email}</div>
+            <div className="text-sm text-gray-900 dark:text-gray-100 mt-1">
+              {user.email}
+            </div>
           </div>
         </div>
         {/* 创建时间 */}

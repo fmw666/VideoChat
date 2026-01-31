@@ -6,3 +6,4 @@
  */
 
 export { useAssets } from './useAssets';
+export { useInfiniteScroll } from './useInfiniteScroll';

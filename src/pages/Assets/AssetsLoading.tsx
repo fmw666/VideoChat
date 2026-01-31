@@ -27,9 +27,16 @@ const LOADING_TEXT = '图片加载中...';
 
 const AssetsLoading: FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-full min-h-[240px] py-12 w-full" role="status" aria-live="polite">
-      <ArrowPathIcon className="h-14 w-14 text-indigo-500 animate-spin mb-4" />
-      <span className="text-base font-medium text-gray-500 dark:text-gray-300 select-none" aria-label={LOADING_TEXT}>
+    <div
+      className="flex flex-col items-center justify-center h-full min-h-[240px] py-12 w-full"
+      role="status"
+      aria-live="polite"
+    >
+      <ArrowPathIcon className="h-14 w-14 text-zinc-500 dark:text-zinc-400 animate-spin mb-4" />
+      <span
+        className="text-base font-medium text-gray-500 dark:text-gray-300 select-none"
+        aria-label={LOADING_TEXT}
+      >
         {LOADING_TEXT}
       </span>
     </div>

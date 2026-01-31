@@ -17,9 +17,9 @@ import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 // --- Third-party Libraries ---
-import { 
-  ExclamationCircleIcon, 
-  ClockIcon, 
+import {
+  ExclamationCircleIcon,
+  ClockIcon,
   PlayIcon,
   PauseIcon,
 } from '@heroicons/react/24/solid';
@@ -47,10 +47,10 @@ const GENERATION_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes for video generation
 // Component
 // =================================================================================================
 
-export const VideoResultItem: FC<VideoResultItemProps> = ({ 
-  result, 
-  messageCreatedAt, 
-  onClick 
+export const VideoResultItem: FC<VideoResultItemProps> = ({
+  result,
+  messageCreatedAt,
+  onClick,
 }) => {
   const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -61,17 +61,20 @@ export const VideoResultItem: FC<VideoResultItemProps> = ({
     result.isGenerating &&
     Date.now() - new Date(messageCreatedAt).getTime() > GENERATION_TIMEOUT_MS;
 
-  const handlePlayPause = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
+  const handlePlayPause = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (videoRef.current) {
+        if (isPlaying) {
+          videoRef.current.pause();
+        } else {
+          videoRef.current.play();
+        }
+        setIsPlaying(!isPlaying);
       }
-      setIsPlaying(!isPlaying);
-    }
-  }, [isPlaying]);
+    },
+    [isPlaying]
+  );
 
   const handleVideoEnded = useCallback(() => {
     setIsPlaying(false);
@@ -106,22 +109,24 @@ export const VideoResultItem: FC<VideoResultItemProps> = ({
     return (
       <div
         data-result-id={result.id}
-        className="group relative aspect-video min-w-[280px] rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 cursor-pointer"
+        className="group relative aspect-video min-w-[280px] rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 bg-zinc-100 dark:bg-zinc-800/50 cursor-pointer"
         onClick={onClick}
       >
         <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
           {/* Loading 转圈动画 */}
           <div className="relative w-16 h-16 mb-3">
             <div className="absolute inset-0 rounded-full border-4 border-gray-200 dark:border-gray-700"></div>
-            <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-indigo-500 dark:border-t-indigo-400 animate-spin"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-zinc-500 dark:border-t-zinc-400 animate-spin"></div>
           </div>
-          
+
           {/* 状态文字 */}
           <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">
             {t('chat.generation.videoGenerating')}
           </span>
           <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            {result.taskId ? `任务ID: ${result.taskId.slice(0, 8)}...` : '正在创建任务...'}
+            {result.taskId
+              ? `任务ID: ${result.taskId.slice(0, 8)}...`
+              : '正在创建任务...'}
           </span>
         </div>
       </div>
@@ -173,7 +178,7 @@ export const VideoResultItem: FC<VideoResultItemProps> = ({
         />
 
         {/* 播放/暂停按钮覆盖层 */}
-        <div 
+        <div
           className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
             isHovering || !isPlaying ? 'opacity-100' : 'opacity-0'
           }`}
@@ -191,14 +196,21 @@ export const VideoResultItem: FC<VideoResultItemProps> = ({
         </div>
 
         {/* 视频信息 */}
-        <div className={`absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-200 ${
-          isHovering ? 'opacity-100' : 'opacity-0'
-        }`}>
+        <div
+          className={`absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-200 ${
+            isHovering ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
           <div className="flex items-center justify-between text-white text-xs">
             {result.duration && (
-              <span>{Math.floor(result.duration / 60)}:{String(result.duration % 60).padStart(2, '0')}</span>
+              <span>
+                {Math.floor(result.duration / 60)}:
+                {String(result.duration % 60).padStart(2, '0')}
+              </span>
             )}
-            <span className="text-white/70">{t('chat.video.clickToExpand')}</span>
+            <span className="text-white/70">
+              {t('chat.video.clickToExpand')}
+            </span>
           </div>
         </div>
       </div>
@@ -213,7 +225,9 @@ export const VideoResultItem: FC<VideoResultItemProps> = ({
       onClick={onClick}
     >
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-sm text-gray-500 dark:text-gray-400">{t('common.loading')}</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          {t('common.loading')}
+        </span>
       </div>
     </div>
   );

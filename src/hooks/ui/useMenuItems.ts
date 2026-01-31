@@ -21,6 +21,7 @@ import {
   Cog6ToothIcon, 
   PhotoIcon, 
   ArrowRightOnRectangleIcon,
+  ClockIcon,
 } from '@heroicons/react/24/outline';
 
 // =================================================================================================
@@ -46,7 +47,8 @@ export const useMenuItems = (
   onProfileClick: () => void,
   onSettingsClick: () => void,
   onSignOut: () => void,
-  closeMenu?: () => void
+  closeMenu?: () => void,
+  onRequestLogsClick?: () => void
 ): MenuItem[] => {
   // --- Hooks ---
   const location = useLocation();
@@ -64,6 +66,11 @@ export const useMenuItems = (
     closeMenu?.();
   }, [onSettingsClick, closeMenu]);
 
+  const handleRequestLogsClick = useCallback(() => {
+    onRequestLogsClick?.();
+    closeMenu?.();
+  }, [onRequestLogsClick, closeMenu]);
+
   // --- Return menu items configuration ---
   return [
     {
@@ -77,6 +84,12 @@ export const useMenuItems = (
       icon: Cog6ToothIcon,
       label: 'settings.title',
       onClick: handleSettingsClick,
+    },
+    {
+      id: 'request-logs',
+      icon: ClockIcon,
+      label: 'menu.requestLogs',
+      onClick: handleRequestLogsClick,
     },
     {
       id: 'assets',

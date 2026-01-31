@@ -49,7 +49,7 @@ const RenameChatModal: FC<RenameChatModalProps> = ({
   onClose,
   onConfirm,
   chat,
-  isLoading = false
+  isLoading = false,
 }) => {
   // --- State ---
   const [newTitle, setNewTitle] = useState('');
@@ -82,7 +82,7 @@ const RenameChatModal: FC<RenameChatModalProps> = ({
   // --- Event Handlers ---
   const handleConfirm = async () => {
     if (!newTitle.trim() || isSubmitting || isLoading) return;
-    
+
     setIsSubmitting(true);
     try {
       await onConfirm(newTitle.trim());
@@ -121,7 +121,10 @@ const RenameChatModal: FC<RenameChatModalProps> = ({
       <div className="space-y-4">
         {/* Input */}
         <div>
-          <label htmlFor="chat-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            htmlFor="chat-title"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             {t('history.rename.label')}
           </label>
           <input
@@ -129,16 +132,19 @@ const RenameChatModal: FC<RenameChatModalProps> = ({
             id="chat-title"
             type="text"
             value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
+            onChange={e => setNewTitle(e.target.value)}
             onKeyDown={handleKeyDown}
             maxLength={MAX_TITLE_LENGTH}
             disabled={isSubmitting || isLoading}
-            className="w-full px-4 py-3 text-sm bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-4 py-3 text-sm bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             placeholder={t('history.rename.placeholder')}
           />
           <div className="flex justify-between items-center mt-1">
             <span className="text-xs text-gray-500 dark:text-gray-400">
-              {t('history.rename.characterCount', { count: newTitle.length, max: MAX_TITLE_LENGTH })}
+              {t('history.rename.characterCount', {
+                count: newTitle.length,
+                max: MAX_TITLE_LENGTH,
+              })}
             </span>
             {newTitle.length > MAX_TITLE_LENGTH * 0.8 && (
               <span className="text-xs text-orange-500">
@@ -160,7 +166,7 @@ const RenameChatModal: FC<RenameChatModalProps> = ({
           <button
             onClick={handleConfirm}
             disabled={!newTitle.trim() || isSubmitting || isLoading}
-            className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-4 py-2 text-sm font-medium text-white bg-zinc-700 hover:bg-zinc-800 dark:bg-zinc-600 dark:hover:bg-zinc-500 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {isSubmitting ? (
               <>

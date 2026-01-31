@@ -71,11 +71,17 @@ const Sidebar: FC<SidebarProps> = ({ type = 'chat' }) => {
       <div className="px-4 mb-4">
         <motion.button
           onClick={handleNewClick}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl shadow-sm hover:shadow-md"
+          className="group relative w-full flex items-center justify-center gap-2 px-4 py-2.5 
+            bg-gradient-to-r from-zinc-800 to-zinc-700 
+            dark:from-indigo-600 dark:to-violet-600
+            text-white rounded-xl shadow-md 
+            hover:shadow-lg hover:shadow-indigo-500/20 dark:hover:shadow-indigo-500/30
+            border border-zinc-600/50 dark:border-indigo-400/30
+            transition-all duration-300"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          <PlusIcon className="w-5 h-5" />
+          <PlusIcon className="w-5 h-5 transition-transform duration-300 group-hover:rotate-90" />
           <span className="font-medium">New Chat</span>
         </motion.button>
       </div>

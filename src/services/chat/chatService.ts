@@ -17,7 +17,8 @@ import { authService } from '@/services/auth/authService';
 // Constants
 // =================================================================================================
 
-const CHAT_TABLE_NAME = import.meta.env.VITE_SUPABASE_CHAT_TABLE_NAME || 'chat_msgs';
+const CHAT_TABLE_NAME =
+  import.meta.env.VITE_SUPABASE_CHAT_TABLE_NAME || 'chat_msgs';
 
 // =================================================================================================
 // Type Definitions
@@ -35,12 +36,12 @@ export interface Model {
  */
 export interface VideoResult {
   id: string;
-  taskId: string | null;           // VOD API 返回的任务 ID
-  videoUrl: string | null;         // Supabase S3 存储的视频 URL
-  coverUrl: string | null;         // 视频封面 URL
-  duration: number | null;         // 视频时长（秒）
-  status: 'PROCESSING' | 'FINISH' | 'FAIL';  // 任务状态
-  progress: number;                // 进度百分比 0-100
+  taskId: string | null; // VOD API 返回的任务 ID
+  videoUrl: string | null; // Supabase S3 存储的视频 URL
+  coverUrl: string | null; // 视频封面 URL
+  duration: number | null; // 视频时长（秒）
+  status: 'PROCESSING' | 'FINISH' | 'FAIL'; // 任务状态
+  progress: number; // 进度百分比 0-100
   error: string | null;
   errorMessage: string | null;
   isGenerating: boolean;
@@ -88,7 +89,7 @@ export interface MessageVideoConfig {
  */
 export interface MessageUploadedImage {
   id: string;
-  url: string;  // 云存储 URL
+  url: string; // 云存储 URL
   name: string;
 }
 
@@ -155,10 +156,13 @@ export class ChatService {
         .eq('user_id', currentUser.id)
         .eq('archived', false)
         .order('created_at', { ascending: false });
-      
+
       if (error) throw error;
-      
-      const result = data.map(chat => ({ ...chat, messages: chat.messages || [] }));
+
+      const result = data.map(chat => ({
+        ...chat,
+        messages: chat.messages || [],
+      }));
       return result;
     } catch (error) {
       console.error('Error fetching user chats:', error);
@@ -167,7 +171,10 @@ export class ChatService {
   }
 
   /** 创建新聊天 */
-  public async createChat(title: string = '新对话', initialMessages: Message[] = []): Promise<Chat> {
+  public async createChat(
+    title: string = '新对话',
+    initialMessages: Message[] = []
+  ): Promise<Chat> {
     try {
       if (!supabase) throw new Error('Supabase client is not initialized');
 
@@ -187,7 +194,10 @@ export class ChatService {
   }
 
   /** 更新聊天记录 */
-  public async updateChat(chatId: string, updates: Partial<Chat>): Promise<Chat> {
+  public async updateChat(
+    chatId: string,
+    updates: Partial<Chat>
+  ): Promise<Chat> {
     try {
       if (!supabase) throw new Error('Supabase client is not initialized');
 
@@ -211,7 +221,8 @@ export class ChatService {
       if (!supabase) throw new Error('Supabase client is not initialized');
 
       const updatedMessages = [...(chat.messages || []), message];
-      const title = chat.messages?.length === 0 ? message.content.slice(0, 30) : chat.title;
+      const title =
+        chat.messages?.length === 0 ? message.content.slice(0, 30) : chat.title;
       const { data, error } = await supabase
         .from(CHAT_TABLE_NAME)
         .update({ messages: updatedMessages, title })
@@ -236,7 +247,7 @@ export class ChatService {
         .from('assets')
         .delete()
         .eq('chat_id', chatId);
-      
+
       if (assetsError) {
         console.error('Error deleting assets:', assetsError);
       }
@@ -246,7 +257,7 @@ export class ChatService {
         .from(CHAT_TABLE_NAME)
         .delete()
         .eq('id', chatId);
-      
+
       if (chatError) throw chatError;
     } catch (error) {
       console.error('Error deleting chat:', error);
@@ -297,7 +308,7 @@ export class ChatService {
         .from(CHAT_TABLE_NAME)
         .update({ archived: true })
         .eq('id', chatId);
-      
+
       if (error) throw error;
     } catch (error) {
       console.error('Error archiving chat:', error);
@@ -312,13 +323,13 @@ export class ChatService {
 
       const currentUser = await authService.getCurrentUser();
       if (!currentUser) throw new Error('User not authenticated');
-      
+
       const { error } = await supabase
         .from(CHAT_TABLE_NAME)
         .update({ archived: true })
         .eq('user_id', currentUser.id)
         .eq('archived', false);
-      
+
       if (error) throw error;
     } catch (error) {
       console.error('Error archiving all chats:', error);
@@ -333,23 +344,23 @@ export class ChatService {
 
       const currentUser = await authService.getCurrentUser();
       if (!currentUser) throw new Error('User not authenticated');
-      
+
       // 1. delete related assets records (only delete assets of unarchived chats)
       const { data: chatsToDelete, error: chatsError } = await supabase
         .from(CHAT_TABLE_NAME)
         .select('id')
         .eq('user_id', currentUser.id)
         .eq('archived', false);
-      
+
       if (chatsError) throw chatsError;
-      
+
       if (chatsToDelete && chatsToDelete.length > 0) {
         const chatIds = chatsToDelete.map(chat => chat.id);
         const { error: assetsError } = await supabase
           .from('assets')
           .delete()
           .in('chat_id', chatIds);
-        
+
         if (assetsError) {
           console.error('Error deleting assets:', assetsError);
         }
@@ -361,7 +372,7 @@ export class ChatService {
         .delete()
         .eq('user_id', currentUser.id)
         .eq('archived', false);
-      
+
       if (chatError) throw chatError;
     } catch (error) {
       console.error('Error deleting all chats:', error);
@@ -393,7 +404,12 @@ export class ChatService {
   /**
    * toggle image favorite status
    */
-  public async toggleImageFavorite(chatId: string, messageId: string, imageId: string, isFavorite: boolean): Promise<Chat> {
+  public async toggleImageFavorite(
+    chatId: string,
+    messageId: string,
+    imageId: string,
+    isFavorite: boolean
+  ): Promise<Chat> {
     try {
       if (!supabase) throw new Error('Supabase client is not initialized');
 
@@ -404,11 +420,11 @@ export class ChatService {
         .eq('id', chatId)
         .single();
       if (error || !chat) throw error || new Error('Chat not found');
-      
+
       // find corresponding message and modify its results
       const messages = (chat.messages || []).map((msg: Message) => {
         if (msg.id !== messageId) return msg;
-        
+
         // modify video results of the message
         const newResults: Results = {
           ...msg.results,
@@ -421,18 +437,26 @@ export class ChatService {
             ])
           ),
         };
-        
+
         return { ...msg, results: newResults };
       });
-      
+
       // find the modified message's results
-      const updatedMessage = messages.find((msg: Message) => msg.id === messageId);
+      const updatedMessage = messages.find(
+        (msg: Message) => msg.id === messageId
+      );
       if (!updatedMessage) throw new Error('Message not found');
-      
+
       // only pass results to assets table
-      const updatedAsset = await assetsService.updateAssetResults(chatId, messageId, updatedMessage.results);
+      const updatedAsset = await assetsService.updateAssetResults(
+        chatId,
+        messageId,
+        updatedMessage.results
+      );
       if (!updatedAsset) {
-        console.warn(`Failed to update asset results for chat_id: ${chatId}, message_id: ${messageId}`);
+        console.warn(
+          `Failed to update asset results for chat_id: ${chatId}, message_id: ${messageId}`
+        );
       }
 
       // save all messages to CHAT_TABLE_NAME
@@ -443,7 +467,7 @@ export class ChatService {
         .select()
         .single();
       if (updateError) throw updateError;
-      
+
       return { ...updated, messages: updated.messages || [] };
     } catch (err) {
       console.error('Error toggling image favorite:', err);
@@ -458,13 +482,13 @@ export class ChatService {
 
       const currentUser = await authService.getCurrentUser();
       if (!currentUser) throw new Error('User not authenticated');
-      
+
       const { error } = await supabase
         .from(CHAT_TABLE_NAME)
         .update({ archived: false })
         .eq('user_id', currentUser.id)
         .eq('archived', true);
-      
+
       if (error) throw error;
     } catch (error) {
       console.error('Error unarchiving all chats:', error);
@@ -479,23 +503,23 @@ export class ChatService {
 
       const currentUser = await authService.getCurrentUser();
       if (!currentUser) throw new Error('User not authenticated');
-      
+
       // 1. delete related assets records (only delete assets of archived chats)
       const { data: chatsToDelete, error: chatsError } = await supabase
         .from(CHAT_TABLE_NAME)
         .select('id')
         .eq('user_id', currentUser.id)
         .eq('archived', true);
-      
+
       if (chatsError) throw chatsError;
-      
+
       if (chatsToDelete && chatsToDelete.length > 0) {
         const chatIds = chatsToDelete.map(chat => chat.id);
         const { error: assetsError } = await supabase
           .from('assets')
           .delete()
           .in('chat_id', chatIds);
-        
+
         if (assetsError) {
           console.error('Error deleting assets:', assetsError);
         }
@@ -507,7 +531,7 @@ export class ChatService {
         .delete()
         .eq('user_id', currentUser.id)
         .eq('archived', true);
-      
+
       if (chatError) throw chatError;
     } catch (error) {
       console.error('Error deleting all archived chats:', error);

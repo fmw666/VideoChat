@@ -6,7 +6,7 @@
  */
 
 /*
-豆包AI绘图服务
+豆包图像生成服务
 
 参考官方文档：https://www.volcengine.com/docs/6791/1279296
 核心：
@@ -15,13 +15,13 @@
 
 import { StandardResponse } from './baseService';
 
-export type DoubaoModel = 
-  | 'doubao-seedream-3-0-t2i-250415'  // 通用3.0-文生图
-  | 'high_aes_general_v21_L'  // 通用2.1-文生图
-  | 'high_aes_general_v20_L'  // 通用2.0Pro-文生图
-  | 'high_aes_general_v20'  // 通用2.0-文生图
-  | 'high_aes_general_v14'  // 通用1.4-文生图
-  | 't2i_xl_sft'  // 通用XL pro-文生图
+export type DoubaoModel =
+  | 'doubao-seedream-3-0-t2i-250415' // 通用3.0-文生图
+  | 'high_aes_general_v21_L' // 通用2.1-文生图
+  | 'high_aes_general_v20_L' // 通用2.0Pro-文生图
+  | 'high_aes_general_v20' // 通用2.0-文生图
+  | 'high_aes_general_v14' // 通用1.4-文生图
+  | 't2i_xl_sft'; // 通用XL pro-文生图
 
 export interface DoubaoConfig {
   apiKey: string;
@@ -34,7 +34,11 @@ export interface DoubaoConfig {
   arkApiKey: string;
 }
 
-export type DoubaoConfigInput = Pick<DoubaoConfig, 'apiKey' | 'apiSecret' | 'arkApiKey'> & Partial<Omit<DoubaoConfig, 'apiKey' | 'apiSecret' | 'arkApiKey'>>;
+export type DoubaoConfigInput = Pick<
+  DoubaoConfig,
+  'apiKey' | 'apiSecret' | 'arkApiKey'
+> &
+  Partial<Omit<DoubaoConfig, 'apiKey' | 'apiSecret' | 'arkApiKey'>>;
 
 export interface DoubaoRequest {
   prompt: string;
@@ -45,9 +49,9 @@ export interface DoubaoRequest {
   steps?: number;
   seed?: number;
   cfgScale?: number;
-  imageUrl?: string;  // For img2img tasks
-  maskUrl?: string;   // For inpainting tasks
-  strength?: number;  // For img2img tasks
+  imageUrl?: string; // For img2img tasks
+  maskUrl?: string; // For inpainting tasks
+  strength?: number; // For img2img tasks
 }
 
 export interface DoubaoResponse {
@@ -65,7 +69,9 @@ export class DoubaoService {
 
   constructor(config: DoubaoConfigInput) {
     this.config = {
-      endpoint: import.meta.env.DEV ? '/api/doubao' : 'https://visual.volcengineapi.com',
+      endpoint: import.meta.env.DEV
+        ? '/api/doubao'
+        : 'https://visual.volcengineapi.com',
       region: 'cn-north-1',
       service: 'cv',
       host: 'visual.volcengineapi.com',
@@ -100,7 +106,7 @@ export class DoubaoService {
 
   private async hmacSHA256(
     key: string | Uint8Array,
-    content: string,
+    content: string
   ): Promise<Uint8Array> {
     const encoder = new TextEncoder();
     const keyData = key instanceof Uint8Array ? key : encoder.encode(key);
@@ -114,11 +120,7 @@ export class DoubaoService {
       ['sign']
     );
 
-    const signature = await crypto.subtle.sign(
-      'HMAC',
-      cryptoKey,
-      contentData
-    );
+    const signature = await crypto.subtle.sign('HMAC', cryptoKey, contentData);
 
     return new Uint8Array(signature);
   }
@@ -127,7 +129,7 @@ export class DoubaoService {
     secretKey: string,
     date: string,
     region: string,
-    service: string,
+    service: string
   ): Promise<Uint8Array> {
     const kDate = await this.hmacSHA256(secretKey, date);
     const kRegion = await this.hmacSHA256(kDate, region);
@@ -151,13 +153,15 @@ export class DoubaoService {
     const signHeader = 'host;x-date;x-content-sha256;content-type';
     const contentType = 'application/json';
 
-    const queryString = Array.from(new Map([
-      ['Action', action],
-      ['Version', version],
-    ]).entries())
+    const queryString = Array.from(
+      new Map([
+        ['Action', action],
+        ['Version', version],
+      ]).entries()
+    )
       .map(
         ([key, value]) =>
-          `${this.signStringEncoder(key)}=${this.signStringEncoder(value)}`,
+          `${this.signStringEncoder(key)}=${this.signStringEncoder(value)}`
       )
       .join('&');
 
@@ -186,7 +190,7 @@ export class DoubaoService {
       this.config.apiSecret,
       shortXDate,
       this.config.region,
-      this.config.service,
+      this.config.service
     );
 
     const signature = Array.from(await this.hmacSHA256(signKey, stringToSign))
@@ -197,11 +201,11 @@ export class DoubaoService {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Host': this.config.host,
+          Host: this.config.host,
           'X-Date': xDate,
           'X-Content-Sha256': xContentSha256,
           'Content-Type': contentType,
-          'Authorization': `HMAC-SHA256 Credential=${this.config.apiKey}/${credentialScope}, SignedHeaders=${signHeader}, Signature=${signature}`,
+          Authorization: `HMAC-SHA256 Credential=${this.config.apiKey}/${credentialScope}, SignedHeaders=${signHeader}, Signature=${signature}`,
         },
         body,
       });
@@ -209,13 +213,13 @@ export class DoubaoService {
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
         throw new Error(
-          errorData?.message || 
-          `Doubao API error: ${response.status} ${response.statusText}`
+          errorData?.message ||
+            `Doubao API error: ${response.status} ${response.statusText}`
         );
       }
 
       const result = await response.json();
-      
+
       if (result.error) {
         throw new Error(result.error);
       }
@@ -233,18 +237,23 @@ export class DoubaoService {
     // 新增：支持 Ark seedream 3.0
     if (model === 'doubao-seedream-3-0-t2i-250415') {
       try {
-        const response = await fetch(import.meta.env.DEV ? '/api/ark' : 'https://ark.cn-beijing.volces.com/api/v3/images/generations', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.config.arkApiKey}`,
-          },
-          body: JSON.stringify({
-            model,
-            prompt: request.prompt,
-            watermark: false
-          }),
-        });
+        const response = await fetch(
+          import.meta.env.DEV
+            ? '/api/ark'
+            : 'https://ark.cn-beijing.volces.com/api/v3/images/generations',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${this.config.arkApiKey}`,
+            },
+            body: JSON.stringify({
+              model,
+              prompt: request.prompt,
+              watermark: false,
+            }),
+          }
+        );
         const result = await response.json();
         if (response.ok && result?.data?.length > 0) {
           const originalImageUrl = result.data[0].url;
@@ -276,7 +285,11 @@ export class DoubaoService {
 
     try {
       const response: DoubaoResponse = await this.makeRequest(payload);
-      if (response.message === 'Success' && response.data?.image_urls && response.data?.image_urls?.length > 0) {
+      if (
+        response.message === 'Success' &&
+        response.data?.image_urls &&
+        response.data?.image_urls?.length > 0
+      ) {
         const originalImageUrl = response.data.image_urls[0];
         // 只返回原始图片 URL，不上传到 storage
         return {
@@ -302,7 +315,11 @@ export class DoubaoService {
    * 测试服务配置是否正确
    * 这个方法会尝试生成一个简单的测试图片来验证服务是否可用
    */
-  async testService(): Promise<{ success: boolean; message: string; details?: any }> {
+  async testService(): Promise<{
+    success: boolean;
+    message: string;
+    details?: any;
+  }> {
     try {
       console.log('🧪 开始测试 DoubaoService...');
       console.log('📋 配置信息:', {
@@ -323,7 +340,7 @@ export class DoubaoService {
           details: {
             hasApiKey: !!this.config.apiKey,
             hasApiSecret: !!this.config.apiSecret,
-          }
+          },
         };
       }
 
@@ -344,14 +361,14 @@ export class DoubaoService {
           details: {
             imageUrl: result.imageUrl,
             model: testRequest.model,
-          }
+          },
         };
       } else {
         console.log('❌ 测试失败：', result.error);
         return {
           success: false,
           message: `❌ 图片生成失败: ${result.error}`,
-          details: result
+          details: result,
         };
       }
     } catch (error) {
@@ -359,7 +376,7 @@ export class DoubaoService {
       return {
         success: false,
         message: `💥 测试失败: ${error instanceof Error ? error.message : '未知错误'}`,
-        details: error
+        details: error,
       };
     }
   }

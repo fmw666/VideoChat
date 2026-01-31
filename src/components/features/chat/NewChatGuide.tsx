@@ -132,17 +132,17 @@ export const NewChatGuide: FC = () => {
                 className="inline-block mb-6"
               >
                 <div className="relative">
-                  <SparklesIcon className="w-16 h-16 text-indigo-500" />
+                  <SparklesIcon className="w-16 h-16 text-zinc-700 dark:text-zinc-300" />
                   <motion.div
                     variants={pulseVariants}
                     animate="animate"
-                    className="absolute inset-0 bg-indigo-500/20 rounded-full blur-xl"
+                    className="absolute inset-0 bg-zinc-500/20 rounded-full blur-xl"
                   />
                 </div>
               </motion.div>
               <motion.h1 
                 variants={itemVariants}
-                className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4"
+                className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-4"
               >
                 {t('chat.guide.title')}
               </motion.h1>
@@ -157,7 +157,7 @@ export const NewChatGuide: FC = () => {
             {/* Usage tips */}
             <motion.div 
               variants={itemVariants}
-              className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700"
+              className="bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
             >
               <div className="flex items-center gap-3 mb-4">
                 <LightBulbIcon className="w-6 h-6 text-amber-500" />
@@ -172,7 +172,7 @@ export const NewChatGuide: FC = () => {
                     variants={itemVariants}
                     className="flex items-center"
                   >
-                    <span className="flex-shrink-0 w-2 h-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 mr-2" />
+                    <span className="flex-shrink-0 w-2 h-2 rounded-full bg-zinc-400 dark:bg-zinc-500 mr-2" />
                     <button
                       onClick={() => handleExampleClick(example)}
                       className="text-left text-gray-700 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg px-3 py-2"

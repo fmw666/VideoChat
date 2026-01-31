@@ -24,6 +24,7 @@ import { UserCircleIcon } from '@heroicons/react/24/outline';
 // --- Components ---
 import { SettingsModal } from '@/components/features/user/SettingsModal';
 import { UserProfileModal } from '@/components/features/user/UserProfileModal';
+import { RequestLogsModal } from '@/components/features/user/RequestLogsModal';
 // --- Hooks ---
 import { useAuth } from '@/hooks/auth';
 import { useMenuItems } from '@/hooks/ui/useMenuItems';
@@ -50,6 +51,7 @@ const UserMenu: FC<UserMenuProps> = ({ isCollapsed }) => {
   // --- State and Refs ---
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isRequestLogsOpen, setIsRequestLogsOpen] = useState(false);
   const closeRef = useRef<() => void>(() => {});
 
   // --- Hooks ---
@@ -77,11 +79,19 @@ const UserMenu: FC<UserMenuProps> = ({ isCollapsed }) => {
     setIsSettingsOpen(false);
   }, []);
 
+  const handleRequestLogsClick = useCallback(() => {
+    setIsRequestLogsOpen(true);
+  }, []);
+
+  const handleRequestLogsClose = useCallback(() => {
+    setIsRequestLogsOpen(false);
+  }, []);
+
   const handleLoginClick = useCallback(() => {
     eventBus.emit(EVENT_NEED_SIGN_IN);
   }, []);
 
-  const menuItems = useMenuItems(handleProfileClick, handleSettingsClick, handleSignOut, () => closeRef.current());
+  const menuItems = useMenuItems(handleProfileClick, handleSettingsClick, handleSignOut, () => closeRef.current(), handleRequestLogsClick);
 
   // --- Render Logic ---
   if (!user) {
@@ -113,7 +123,7 @@ const UserMenu: FC<UserMenuProps> = ({ isCollapsed }) => {
                     : 'hover:bg-gray-50 dark:hover:bg-gray-800'
                 }`}
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 font-medium text-white shadow-sm dark:from-indigo-400 dark:to-purple-400">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-700 dark:bg-zinc-300 font-medium text-white dark:text-zinc-800 shadow-sm">
                   <div className={`${getAvatarClasses()} ${getAvatarSizeClasses('sm')}`}>
                     <span>
                       {getAvatarText(user)}
@@ -174,6 +184,12 @@ const UserMenu: FC<UserMenuProps> = ({ isCollapsed }) => {
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={handleSettingsClose}
+      />
+
+      {/* Request Logs Modal */}
+      <RequestLogsModal
+        isOpen={isRequestLogsOpen}
+        onClose={handleRequestLogsClose}
       />
     </>
   );

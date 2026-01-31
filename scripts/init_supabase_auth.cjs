@@ -5,7 +5,7 @@
  * @version 1.0.0
  * @date 2025-07-01
  *
- * This script updates the Supabase authentication email templates (confirmation, magic link) for DesignChat.
+ * This script updates the Supabase authentication email templates (confirmation, magic link) for VideoChat.
  * It is intended for development and deployment automation.
  *
  * Usage:
@@ -28,14 +28,17 @@ const SUPABASE_ACCESS_TOKEN = process.env.VITE_SUPABASE_ACCESS_TOKEN;
 const PROJECT_REF = process.env.VITE_SUPABASE_PROJECT_REF;
 
 if (!SUPABASE_ACCESS_TOKEN || !PROJECT_REF) {
-  console.error('[ERROR] VITE_SUPABASE_ACCESS_TOKEN and VITE_SUPABASE_PROJECT_REF must be set as environment variables.');
+  console.error(
+    '[ERROR] VITE_SUPABASE_ACCESS_TOKEN and VITE_SUPABASE_PROJECT_REF must be set as environment variables.'
+  );
   process.exit(1);
 }
 
 const API_URL = `https://api.supabase.com/v1/projects/${PROJECT_REF}/config/auth`;
 
-const EMAIL_SUBJECT = '[DesignChat] Please confirm your verification code';
-const EMAIL_CONTENT = '<h3>The verification code expires within <u>three minutes</u></h3>\n\n<p>Please enter this code: {{ .Token }}</p>';
+const EMAIL_SUBJECT = '[VideoChat] Please confirm your verification code';
+const EMAIL_CONTENT =
+  '<h3>The verification code expires within <u>three minutes</u></h3>\n\n<p>Please enter this code: {{ .Token }}</p>';
 
 const payload = {
   // signup confirm
@@ -53,11 +56,13 @@ const payload = {
  */
 async function main() {
   try {
-    console.log('[INFO] Updating Supabase auth email templates for verification code...');
+    console.log(
+      '[INFO] Updating Supabase auth email templates for verification code...'
+    );
     const response = await fetchFn(API_URL, {
       method: 'PATCH',
       headers: {
-        'Authorization': `Bearer ${SUPABASE_ACCESS_TOKEN}`,
+        Authorization: `Bearer ${SUPABASE_ACCESS_TOKEN}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),

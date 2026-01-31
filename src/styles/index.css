@@ -4,23 +4,43 @@
 
 @layer base {
   :root {
-    --color-scrollbar: rgba(142, 134, 218, 0.78);
+    /* 简约中性色滚动条 */
+    --color-scrollbar: rgba(161, 161, 170, 0.5);
+    --color-scrollbar-hover: rgba(113, 113, 122, 0.6);
   }
+
   .dark {
-    --color-scrollbar: rgba(102, 89, 224, 0.78);
+    --color-scrollbar: rgba(82, 82, 91, 0.6);
+    --color-scrollbar-hover: rgba(113, 113, 122, 0.7);
   }
 
   html {
-    font-family: "Inter var", system-ui, sans-serif;
+    font-family:
+      'Inter var',
+      system-ui,
+      -apple-system,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  * {
-    @apply transition-all duration-100;
+  body {
+    @apply text-primary-800 dark:text-primary-100;
+    @apply bg-white dark:bg-primary-950;
   }
 
-  /* 全局滚动条样式 */
+  /* 更精细的过渡控制，避免全局影响性能 */
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    @apply transition-colors duration-150;
+  }
+
+  /* 全局滚动条样式 - 简约细腻 */
   ::-webkit-scrollbar {
-    @apply w-1 h-1;
+    @apply w-1.5 h-1.5;
   }
 
   ::-webkit-scrollbar-track {
@@ -29,10 +49,75 @@
 
   ::-webkit-scrollbar-thumb {
     background-color: var(--color-scrollbar);
-    border-radius: 5px;
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-scrollbar-hover);
+  }
+
+  /* Firefox 滚动条样式 */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-scrollbar) transparent;
+  }
+
+  /* 选中文本样式 */
+  ::selection {
+    @apply bg-accent-200 dark:bg-accent-900/50;
   }
 }
 
-@layer components {}
+@layer components {
+  /* 卡片基础样式 */
+  .card {
+    @apply bg-white dark:bg-primary-900 rounded-xl border border-primary-200 dark:border-primary-800;
+  }
 
-@layer utilities {}
+  /* 输入框基础样式 */
+  .input-base {
+    @apply bg-primary-50 dark:bg-primary-900 border border-primary-200 dark:border-primary-700 rounded-lg;
+    @apply focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500;
+    @apply placeholder:text-primary-400 dark:placeholder:text-primary-500;
+  }
+
+  /* 按钮基础样式 */
+  .btn-primary {
+    @apply bg-primary-900 dark:bg-primary-100 text-white dark:text-primary-900;
+    @apply hover:bg-primary-800 dark:hover:bg-primary-200;
+    @apply active:bg-primary-950 dark:active:bg-primary-300;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-accent {
+    @apply bg-accent-500 text-white;
+    @apply hover:bg-accent-600;
+    @apply active:bg-accent-700;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-primary-600 dark:text-primary-400;
+    @apply hover:bg-primary-100 dark:hover:bg-primary-800;
+  }
+}
+
+@layer utilities {
+  /* 文本渐变 - 使用强调色 */
+  .text-gradient-accent {
+    @apply bg-gradient-to-r from-accent-500 to-accent-600 bg-clip-text text-transparent;
+  }
+
+  /* 柔和阴影 */
+  .shadow-soft {
+    box-shadow:
+      0 2px 8px -2px rgba(0, 0, 0, 0.08),
+      0 4px 16px -4px rgba(0, 0, 0, 0.04);
+  }
+
+  .dark .shadow-soft {
+    box-shadow:
+      0 2px 8px -2px rgba(0, 0, 0, 0.3),
+      0 4px 16px -4px rgba(0, 0, 0, 0.2);
+  }
+}

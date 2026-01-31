@@ -1,0 +1,38 @@
+# 依赖和缓存
+node_modules/
+.pnpm-store/
+
+# 开发配置
+.cursor/
+.vscode/
+.idea/
+
+# 测试
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__/
+coverage/
+
+# 文档（不影响运行）
+docs/
+*.md
+!README.md
+
+# 本地脚本
+scripts/
+
+# 环境变量示例
+.env.example
+.env.local
+.env.*.local
+
+# Git
+.git/
+.gitignore
+
+# 其他
+*.log
+.DS_Store
+Thumbs.db

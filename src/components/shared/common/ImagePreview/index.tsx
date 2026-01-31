@@ -18,8 +18,17 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 // --- Third-party Libraries ---
-import { XMarkIcon, DocumentDuplicateIcon, PencilSquareIcon, ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/outline';
-import { StarIcon, ArrowPathIcon, ArrowDownTrayIcon } from '@heroicons/react/24/solid';
+import {
+  XMarkIcon,
+  DocumentDuplicateIcon,
+  PencilSquareIcon,
+  ChatBubbleLeftEllipsisIcon,
+} from '@heroicons/react/24/outline';
+import {
+  StarIcon,
+  ArrowPathIcon,
+  ArrowDownTrayIcon,
+} from '@heroicons/react/24/solid';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // --- Internal Libraries ---
@@ -44,7 +53,11 @@ interface ImagePreviewProps {
   isReference: boolean;
   onClose: () => void;
   alt?: string;
-  onDesignClick?: (imageInfo?: { url: string; id: string; messageId: string }) => void;
+  onDesignClick?: (imageInfo?: {
+    url: string;
+    id: string;
+    messageId: string;
+  }) => void;
 }
 
 interface ImageInfo {
@@ -111,21 +124,30 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
     } else {
       // 从视频结果中提取封面图片用于预览
       Object.entries(message.results.videos || {}).forEach(([model, vids]) => {
-        vids.forEach((vid: { coverUrl?: string | null; id: string; createdAt?: string | null; error?: string | null; errorMessage?: string | null; isFavorite?: boolean }) => {
-          if (vid.coverUrl) {
-            arr.push({
-              url: vid.coverUrl,
-              id: vid.id,
-              messageId: message.id,
-              userPrompt: message.content,
-              model,
-              createdAt: vid.createdAt || message.createdAt,
-              error: vid.error || undefined,
-              errorMessage: vid.errorMessage || undefined,
-              isFavorite: vid.isFavorite,
-            });
+        vids.forEach(
+          (vid: {
+            coverUrl?: string | null;
+            id: string;
+            createdAt?: string | null;
+            error?: string | null;
+            errorMessage?: string | null;
+            isFavorite?: boolean;
+          }) => {
+            if (vid.coverUrl) {
+              arr.push({
+                url: vid.coverUrl,
+                id: vid.id,
+                messageId: message.id,
+                userPrompt: message.content,
+                model,
+                createdAt: vid.createdAt || message.createdAt,
+                error: vid.error || undefined,
+                errorMessage: vid.errorMessage || undefined,
+                isFavorite: vid.isFavorite,
+              });
+            }
           }
-        });
+        );
       });
     }
     return arr;
@@ -140,20 +162,27 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
   const imageInfo = images[currentIndex];
   const isFavorite = imageInfo?.isFavorite ?? false;
 
-  const handleCopy = useCallback(async (text: string, type: 'user' | 'ai') => {
-    if (isCopyLoading) return;
-    
-    setIsCopyLoading(true);
-    const result = await copyToClipboard(text);
-    
-    if (result.success) {
-      toast.success(type === 'user' ? t('imagePreview.userPromptCopied') : t('imagePreview.aiPromptCopied'));
-    } else {
-      toast.error(t('imagePreview.copyFailed'));
-    }
-    
-    setIsCopyLoading(false);
-  }, [t, isCopyLoading]);
+  const handleCopy = useCallback(
+    async (text: string, type: 'user' | 'ai') => {
+      if (isCopyLoading) return;
+
+      setIsCopyLoading(true);
+      const result = await copyToClipboard(text);
+
+      if (result.success) {
+        toast.success(
+          type === 'user'
+            ? t('imagePreview.userPromptCopied')
+            : t('imagePreview.aiPromptCopied')
+        );
+      } else {
+        toast.error(t('imagePreview.copyFailed'));
+      }
+
+      setIsCopyLoading(false);
+    },
+    [t, isCopyLoading]
+  );
 
   const handleThumbnailClick = useCallback((index: number) => {
     setCurrentIndex(index);
@@ -169,10 +198,10 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
 
   const handleFavorite = useCallback(async () => {
     if (!imageInfo || !message.id || isFavoriteLoading) return;
-    
+
     const newFavorite = !isFavorite;
     setIsFavoriteLoading(true);
-    
+
     try {
       await toggleImageFavorite(message.id, imageInfo.id, newFavorite);
     } catch (err) {
@@ -180,25 +209,33 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
     } finally {
       setIsFavoriteLoading(false);
     }
-  }, [imageInfo, message.id, isFavorite, isFavoriteLoading, toggleImageFavorite, t]);
+  }, [
+    imageInfo,
+    message.id,
+    isFavorite,
+    isFavoriteLoading,
+    toggleImageFavorite,
+    t,
+  ]);
 
   const handleDownload = useCallback(async () => {
     if (isDownloadLoading || !imageInfo?.url) return;
-    
+
     setIsDownloadLoading(true);
     try {
       // 创建临时 a 标签进行下载
       const link = document.createElement('a');
       link.href = imageInfo.url;
-      
+
       // 从 URL 中提取文件名，如果没有则使用默认名称
       const urlParts = imageInfo.url.split('/');
-      const fileName = urlParts[urlParts.length - 1] || `image-${imageInfo.id}.jpg`;
-      
+      const fileName =
+        urlParts[urlParts.length - 1] || `image-${imageInfo.id}.jpg`;
+
       link.download = fileName;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
-      
+
       // 添加到 DOM，触发下载，然后移除
       document.body.appendChild(link);
       link.click();
@@ -213,7 +250,7 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
 
   const handleDesignClick = useCallback(async () => {
     if (isDesignLoading || !onDesignClick) return;
-    
+
     setIsDesignLoading(true);
     try {
       await onDesignClick(imageInfo);
@@ -270,7 +307,7 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
           </button>
 
           {/* Left side - Image preview */}
-          <div 
+          <div
             ref={containerRef}
             className="relative flex aspect-square cursor-zoom-in items-center justify-center overflow-hidden bg-gray-100 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] dark:bg-gray-900 dark:bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)]"
             onClick={handleViewerOpen}
@@ -296,18 +333,24 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
                         <button
                           key={img.id}
                           className={`group relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl border-2 transition-all duration-200 focus:outline-none md:h-18 md:w-18
-                            ${idx === currentIndex
-                              ? 'scale-105 border-indigo-500 shadow-lg'
-                              : 'border-transparent shadow-md hover:scale-105 hover:shadow-xl'}
+                            ${
+                              idx === currentIndex
+                                ? 'scale-105 border-zinc-500 shadow-lg'
+                                : 'border-transparent shadow-md hover:scale-105 hover:shadow-xl'
+                            }
                           `}
                           onClick={() => handleThumbnailClick(idx)}
                           tabIndex={0}
-                          aria-label={t('imagePreview.previewImage', { index: idx + 1 })}
+                          aria-label={t('imagePreview.previewImage', {
+                            index: idx + 1,
+                          })}
                         >
                           {/* Index badge */}
-                          <span className={`absolute left-1 top-1 z-10 flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold
-                            ${idx === currentIndex ? 'bg-indigo-600 text-white shadow' : 'border border-gray-300 bg-white/80 text-gray-700'}
-                          `}>
+                          <span
+                            className={`absolute left-1 top-1 z-10 flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold
+                            ${idx === currentIndex ? 'bg-zinc-700 text-white shadow' : 'border border-gray-300 bg-white/80 text-gray-700'}
+                          `}
+                          >
                             {idx + 1}
                           </span>
                           <img
@@ -317,9 +360,19 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
                             draggable={false}
                           />
                           {idx === currentIndex && (
-                            <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-indigo-500/20">
-                              <svg className="h-6 w-6 drop-shadow-md text-indigo-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-zinc-500/20">
+                              <svg
+                                className="h-6 w-6 drop-shadow-md text-zinc-700"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M5 13l4 4L19 7"
+                                />
                               </svg>
                             </div>
                           )}
@@ -337,23 +390,30 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
                 <div className="border-b border-gray-100 p-4 dark:border-gray-800">
                   <div className="mb-4 last:mb-0">
                     <div className="mb-2 flex items-center gap-2">
-                      <ChatBubbleLeftEllipsisIcon className="h-5 w-5 text-indigo-500" />
-                      <h3 className="text-xs font-medium text-gray-700 dark:text-gray-300 md:text-sm">{t('imagePreview.userPrompt')}</h3>
+                      <ChatBubbleLeftEllipsisIcon className="h-5 w-5 text-zinc-600" />
+                      <h3 className="text-xs font-medium text-gray-700 dark:text-gray-300 md:text-sm">
+                        {t('imagePreview.userPrompt')}
+                      </h3>
                     </div>
                     <div className="group relative">
                       <div
                         className="
-                          max-h-32 overflow-y-auto rounded-2xl bg-indigo-50 px-3 py-3 md:py-2.5 text-xs font-medium text-gray-500 scrollbar-thin scrollbar-thumb-indigo-200 dark:bg-indigo-900/30 dark:text-gray-400 dark:scrollbar-thumb-indigo-800 md:text-sm
+                          max-h-32 overflow-y-auto rounded-2xl bg-zinc-100 px-3 py-3 md:py-2.5 text-xs font-medium text-gray-500 scrollbar-thin scrollbar-thumb-zinc-300 dark:bg-zinc-800/50 dark:text-gray-400 dark:scrollbar-thumb-zinc-700 md:text-sm
                         "
-                        style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
+                        style={{
+                          wordBreak: 'break-word',
+                          whiteSpace: 'pre-wrap',
+                        }}
                       >
                         {imageInfo.userPrompt || t('imagePreview.noUserPrompt')}
                       </div>
                       {imageInfo.userPrompt && (
                         <motion.button
-                          onClick={() => handleCopy(imageInfo.userPrompt, 'user')}
+                          onClick={() =>
+                            handleCopy(imageInfo.userPrompt, 'user')
+                          }
                           disabled={isCopyLoading}
-                          className="absolute bottom-1.5 right-1.5 rounded-lg bg-white/50 p-1.5 text-gray-500/70 shadow-sm transition-all duration-200 hover:bg-white/90 hover:shadow-md hover:text-indigo-500 dark:bg-gray-800/50 dark:text-gray-400/70 dark:hover:bg-gray-800/90 dark:hover:text-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="absolute bottom-1.5 right-1.5 rounded-lg bg-white/50 p-1.5 text-gray-500/70 shadow-sm transition-all duration-200 hover:bg-white/90 hover:shadow-md hover:text-zinc-600 dark:bg-gray-800/50 dark:text-gray-400/70 dark:hover:bg-gray-800/90 dark:hover:text-zinc-400 disabled:opacity-50 disabled:cursor-not-allowed"
                           whileHover={{ scale: isCopyLoading ? 1 : 1.05 }}
                           whileTap={{ scale: isCopyLoading ? 1 : 0.95 }}
                         >
@@ -373,29 +433,41 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
                   <div className="border-b border-gray-100 p-4 dark:border-gray-800 flex flex-col gap-2">
                     <div className="mb-2 flex items-center gap-2">
                       <PencilSquareIcon className="h-4 w-4 text-fuchsia-500" />
-                      <h3 className="text-xs font-medium text-gray-700 dark:text-gray-300 md:text-sm">{t('imagePreview.userUploadedImage')}</h3>
+                      <h3 className="text-xs font-medium text-gray-700 dark:text-gray-300 md:text-sm">
+                        {t('imagePreview.userUploadedImage')}
+                      </h3>
                     </div>
                     <div className="flex items-center gap-3">
                       <img
                         src={message.userImage.url}
-                        alt={message.userImage.alt || t('imagePreview.noDescription')}
+                        alt={
+                          message.userImage.alt ||
+                          t('imagePreview.noDescription')
+                        }
                         className="w-16 h-16 rounded-lg object-cover border border-gray-200 dark:border-gray-800 shadow-sm"
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{message.userImage.alt || t('imagePreview.noDescription')}</div>
-                        <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">{t('imagePreview.created')}: {new Date(message.createdAt).toLocaleString()}</div>
-                        {message.userImage.referenceMessageId && message.userImage.referenceResultId && (
-                          <button
-                            className="mt-2 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-800/40 transition-colors"
-                            onClick={() => {
-                              // 可根据需要实现跳转引用逻辑
-                              // handleJumpToReference(message.userImage.referenceMessageId!, message.userImage.referenceResultId!)
-                            }}
-                          >
-                            <ArrowPathIcon className="h-3.5 w-3.5" />
-                            {t('chat.jumpToReference')}
-                          </button>
-                        )}
+                        <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                          {message.userImage.alt ||
+                            t('imagePreview.noDescription')}
+                        </div>
+                        <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                          {t('imagePreview.created')}:{' '}
+                          {new Date(message.createdAt).toLocaleString()}
+                        </div>
+                        {message.userImage.referenceMessageId &&
+                          message.userImage.referenceResultId && (
+                            <button
+                              className="mt-2 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800/50 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+                              onClick={() => {
+                                // 可根据需要实现跳转引用逻辑
+                                // handleJumpToReference(message.userImage.referenceMessageId!, message.userImage.referenceResultId!)
+                              }}
+                            >
+                              <ArrowPathIcon className="h-3.5 w-3.5" />
+                              {t('chat.jumpToReference')}
+                            </button>
+                          )}
                       </div>
                     </div>
                   </div>
@@ -406,17 +478,38 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
                   <div className="border-b border-gray-100 p-4 dark:border-gray-800">
                     <div className="mb-3 flex items-center gap-2">
                       <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-500">
-                        <svg className="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        <svg
+                          className="h-3.5 w-3.5 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                          />
                         </svg>
                       </div>
-                      <h3 className="text-xs font-medium text-gray-700 dark:text-gray-300 md:text-sm">{t('imagePreview.referencedImage')}</h3>
+                      <h3 className="text-xs font-medium text-gray-700 dark:text-gray-300 md:text-sm">
+                        {t('imagePreview.referencedImage')}
+                      </h3>
                     </div>
                     <div className="space-y-2">
                       <div className="rounded-lg bg-gradient-to-r from-amber-50/90 to-orange-50/90 p-3 ring-1 ring-amber-200/50 dark:from-amber-900/30 dark:to-orange-900/30 dark:ring-amber-800/50">
-                        <div className="text-xs font-medium text-amber-700 dark:text-amber-300 mb-1">{t('imagePreview.originalMessage')}</div>
-                        <div className="text-xs text-amber-600 dark:text-amber-400 leading-relaxed" style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
-                          {originalContent || t('imagePreview.noOriginalMessage')}
+                        <div className="text-xs font-medium text-amber-700 dark:text-amber-300 mb-1">
+                          {t('imagePreview.originalMessage')}
+                        </div>
+                        <div
+                          className="text-xs text-amber-600 dark:text-amber-400 leading-relaxed"
+                          style={{
+                            wordBreak: 'break-word',
+                            whiteSpace: 'pre-wrap',
+                          }}
+                        >
+                          {originalContent ||
+                            t('imagePreview.noOriginalMessage')}
                         </div>
                       </div>
                     </div>
@@ -435,22 +528,30 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
                     <div className="bg-gradient-to-br from-gray-50/50 to-white p-4 dark:from-gray-800/30 dark:to-gray-900/30">
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                          <div className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('imagePreview.model')}</div>
-                          <div className="rounded-md bg-gradient-to-r from-indigo-50/90 to-indigo-100/90 px-2.5 py-1 text-xs font-medium text-indigo-700 ring-1 ring-indigo-200/50 dark:from-indigo-900/30 dark:to-indigo-800/30 dark:text-indigo-300 dark:ring-indigo-800/50">{imageInfo.model}</div>
+                          <div className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                            {t('imagePreview.model')}
+                          </div>
+                          <div className="rounded-md bg-gradient-to-r from-zinc-100 to-zinc-200 px-2.5 py-1 text-xs font-medium text-zinc-700 ring-1 ring-zinc-300/50 dark:from-zinc-800/50 dark:to-zinc-700/50 dark:text-zinc-300 dark:ring-zinc-600/50">
+                            {imageInfo.model}
+                          </div>
                         </div>
                         <div className="flex items-center justify-between">
-                          <div className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('imagePreview.created')}</div>
+                          <div className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                            {t('imagePreview.created')}
+                          </div>
                           <div className="rounded-md bg-gradient-to-r from-emerald-50/90 to-emerald-100/90 px-2.5 py-1 text-xs font-medium text-emerald-700 ring-1 ring-emerald-200/50 dark:from-emerald-900/30 dark:to-emerald-800/30 dark:text-emerald-300 dark:ring-emerald-800/50">
                             {new Date(imageInfo.createdAt).toLocaleString()}
                           </div>
                         </div>
                         <div className="flex items-center justify-between">
-                          <div className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('imagePreview.aspectRatio')}</div>
-                          <div className="rounded-md bg-gradient-to-r from-purple-50/90 to-purple-100/90 px-2.5 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-200/50 dark:from-purple-900/30 dark:to-purple-800/30 dark:text-purple-300 dark:ring-purple-800/50 min-w-[60px] flex items-center justify-center">
+                          <div className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                            {t('imagePreview.aspectRatio')}
+                          </div>
+                          <div className="rounded-md bg-gradient-to-r from-amber-50/90 to-amber-100/90 px-2.5 py-1 text-xs font-medium text-amber-700 ring-1 ring-amber-200/50 dark:from-amber-900/30 dark:to-amber-800/30 dark:text-amber-300 dark:ring-amber-800/50 min-w-[60px] flex items-center justify-center">
                             {imageSize.width && imageSize.height ? (
                               `${imageSize.width}:${imageSize.height}`
                             ) : (
-                              <ArrowPathIcon className="h-4 w-4 animate-spin text-purple-400" />
+                              <ArrowPathIcon className="h-4 w-4 animate-spin text-amber-400" />
                             )}
                           </div>
                         </div>
@@ -461,12 +562,14 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
 
                 {/* Action buttons */}
                 <div className="justify-between rounded-b-xl border-t border-gray-100 bg-white px-4 py-4 dark:border-gray-800 dark:bg-gray-900">
-                  <div className={`flex gap-2 ${isReference ? 'w-[30%]' : 'w-[60%]'}`}>
+                  <div
+                    className={`flex gap-2 ${isReference ? 'w-[30%]' : 'w-[60%]'}`}
+                  >
                     {/* Download */}
                     <button
                       onClick={handleDownload}
                       disabled={isDownloadLoading}
-                      className="group flex flex-1 items-center justify-center gap-1 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 py-2 text-sm font-medium text-white shadow transition-all hover:from-indigo-600 hover:to-purple-700 disabled:opacity-75 disabled:cursor-not-allowed"
+                      className="group flex flex-1 items-center justify-center gap-1 rounded-lg bg-zinc-700 dark:bg-zinc-600 py-2 text-sm font-medium text-white shadow transition-all hover:bg-zinc-800 dark:hover:bg-zinc-500 disabled:opacity-75 disabled:cursor-not-allowed"
                       title={t('imagePreview.download')}
                     >
                       {isDownloadLoading ? (
@@ -479,19 +582,27 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
                     {!isReference && (
                       <button
                         className={`group flex flex-1 items-center justify-center gap-1 rounded-lg py-2 text-sm font-medium shadow transition-all
-                          ${isFavorite
-                            ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 shadow-lg'
-                            : 'bg-gray-100 dark:bg-gray-800 text-gray-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:text-amber-500'}
+                          ${
+                            isFavorite
+                              ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 shadow-lg'
+                              : 'bg-gray-100 dark:bg-gray-800 text-gray-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:text-amber-500'
+                          }
                           ${isFavoriteLoading ? 'opacity-75 cursor-not-allowed' : ''}
                         `}
                         onClick={handleFavorite}
                         disabled={isFavoriteLoading}
-                        title={isFavorite ? t('imagePreview.favorited') : t('imagePreview.favorite')}
+                        title={
+                          isFavorite
+                            ? t('imagePreview.favorited')
+                            : t('imagePreview.favorite')
+                        }
                       >
                         {isFavoriteLoading ? (
                           <ArrowPathIcon className="h-5 w-5 animate-spin text-gray-400" />
                         ) : (
-                          <StarIcon className={`h-5 w-5 ${isFavorite ? 'text-white drop-shadow-sm' : 'text-gray-400 group-hover:text-amber-500'}`} />
+                          <StarIcon
+                            className={`h-5 w-5 ${isFavorite ? 'text-white drop-shadow-sm' : 'text-gray-400 group-hover:text-amber-500'}`}
+                          />
                         )}
                       </button>
                     )}
@@ -507,9 +618,9 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
                 disabled={isDesignLoading}
                 className="
                   group pointer-events-auto relative flex items-center gap-2 overflow-hidden rounded-full
-                  bg-gradient-to-r from-indigo-500 to-purple-500 px-8 py-3 text-base font-semibold text-white shadow-md
-                  transition-all duration-200 hover:from-indigo-600 hover:to-purple-600
-                  focus:outline-none focus:ring-2 focus:ring-indigo-400
+                  bg-zinc-700 dark:bg-zinc-600 px-8 py-3 text-base font-semibold text-white shadow-md
+                  transition-all duration-200 hover:bg-zinc-800 dark:hover:bg-zinc-500
+                  focus:outline-none focus:ring-2 focus:ring-zinc-500
                   disabled:opacity-75 disabled:cursor-not-allowed
                 "
                 whileHover={{ scale: isDesignLoading ? 1 : 1.03 }}
@@ -520,7 +631,9 @@ export const ImagePreview: FC<ImagePreviewProps> = ({
                 ) : (
                   <PencilSquareIcon className="mr-1 h-5 w-5" />
                 )}
-                {isDesignLoading ? t('imagePreview.enteringDesign') : t('chat.enterDesign')}
+                {isDesignLoading
+                  ? t('imagePreview.enteringDesign')
+                  : t('chat.enterDesign')}
               </motion.button>
             </div>
           </div>

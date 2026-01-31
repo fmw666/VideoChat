@@ -274,7 +274,7 @@ export const ImageUploader: FC<ImageUploaderProps> = ({
             className={`w-12 h-12 flex items-center justify-center rounded-lg border-2 border-dashed transition-colors ${
               disabled
                 ? 'border-gray-200 dark:border-gray-700 text-gray-300 dark:text-gray-600 cursor-not-allowed'
-                : 'border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 hover:border-indigo-400 dark:hover:border-indigo-500 hover:text-indigo-500 dark:hover:text-indigo-400'
+                : 'border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 hover:border-zinc-500 dark:hover:border-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-400'
             }`}
           >
             <PlusIcon className="w-5 h-5" />
@@ -360,8 +360,8 @@ export const ImageUploader: FC<ImageUploaderProps> = ({
             disabled
               ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 cursor-not-allowed'
               : isDragging
-                ? 'border-indigo-400 dark:border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
-                : 'border-gray-300 dark:border-gray-600 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                ? 'border-zinc-400 dark:border-zinc-500 bg-zinc-100 dark:bg-zinc-800/50'
+                : 'border-gray-300 dark:border-gray-600 hover:border-zinc-500 dark:hover:border-zinc-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
           }`}
         >
           <input
@@ -375,7 +375,7 @@ export const ImageUploader: FC<ImageUploaderProps> = ({
           />
 
           {isDragging ? (
-            <ArrowUpTrayIcon className="w-8 h-8 text-indigo-500 dark:text-indigo-400 mb-2" />
+            <ArrowUpTrayIcon className="w-8 h-8 text-zinc-600 dark:text-zinc-400 mb-2" />
           ) : (
             <PhotoIcon className="w-8 h-8 text-gray-400 dark:text-gray-500 mb-2" />
           )}
@@ -383,7 +383,7 @@ export const ImageUploader: FC<ImageUploaderProps> = ({
           <p
             className={`text-sm font-medium ${
               isDragging
-                ? 'text-indigo-600 dark:text-indigo-400'
+                ? 'text-zinc-700 dark:text-zinc-400'
                 : 'text-gray-600 dark:text-gray-400'
             }`}
           >

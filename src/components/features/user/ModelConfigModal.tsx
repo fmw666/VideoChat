@@ -18,7 +18,17 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 // --- Third-party Libraries ---
-import { CheckCircleIcon, XCircleIcon, ChevronRightIcon, EyeIcon, EyeSlashIcon, InformationCircleIcon, Cog6ToothIcon, KeyIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import {
+  CheckCircleIcon,
+  XCircleIcon,
+  ChevronRightIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  InformationCircleIcon,
+  Cog6ToothIcon,
+  KeyIcon,
+  ShieldCheckIcon,
+} from '@heroicons/react/24/outline';
 import { AnimatePresence, motion } from 'framer-motion';
 
 // --- Internal Libraries ---
@@ -67,7 +77,18 @@ interface ModelConfigModalProps {
 // Constants
 // =================================================================================================
 
-const DEFAULT_MODELS: Omit<ModelConfig, 'isExpanded' | 'showApiKey' | 'showApiSecret' | 'showArkApiKey' | 'isEditing' | 'tempApiKey' | 'tempApiSecret' | 'tempArkApiKey' | 'tempSystemPrompt'>[] = [
+const DEFAULT_MODELS: Omit<
+  ModelConfig,
+  | 'isExpanded'
+  | 'showApiKey'
+  | 'showApiSecret'
+  | 'showArkApiKey'
+  | 'isEditing'
+  | 'tempApiKey'
+  | 'tempApiSecret'
+  | 'tempArkApiKey'
+  | 'tempSystemPrompt'
+>[] = [
   {
     id: 'doubao',
     name: '豆包',
@@ -98,7 +119,7 @@ const DEFAULT_MODELS: Omit<ModelConfig, 'isExpanded' | 'showApiKey' | 'showApiSe
     systemPrompt: '',
     testStatus: TestStatus.NOT_TESTED,
     isTesting: false,
-  }
+  },
 ];
 
 const TEST_DELAY_MS = 2000;
@@ -108,10 +129,15 @@ const SUCCESS_RATE = 0.7; // 70% success rate for testing
 // Component
 // =================================================================================================
 
-export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose }) => {
+export const ModelConfigModal: FC<ModelConfigModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   // --- State and Refs ---
   const [models, setModels] = useState<ModelConfig[]>([]);
-  const [selectedModelForDetail, setSelectedModelForDetail] = useState<string | null>(null);
+  const [selectedModelForDetail, setSelectedModelForDetail] = useState<
+    string | null
+  >(null);
 
   // --- Hooks ---
   const { t } = useTranslation();
@@ -120,7 +146,7 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
     modelConfigs,
     toggleModelEnabled,
     updateModelTestStatus,
-    updateModelConfigJson
+    updateModelConfigJson,
   } = useModel();
 
   // --- Logic and Event Handlers ---
@@ -164,100 +190,136 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
     );
   }, [modelConfigs]);
 
-  const handleModelToggle = useCallback((modelId: string, enabled: boolean) => {
-    toggleModelEnabled(modelId, enabled)
-  }, [toggleModelEnabled]);
+  const handleModelToggle = useCallback(
+    (modelId: string, enabled: boolean) => {
+      toggleModelEnabled(modelId, enabled);
+    },
+    [toggleModelEnabled]
+  );
 
-  const handleModelConfigChange = useCallback((modelId: string, field: 'apiKey' | 'apiSecret' | 'arkApiKey' | 'systemPrompt', value: string) => {
-    setModels(models => models.map(model => model.id === modelId ? { ...model, [field]: value, testStatus: TestStatus.NOT_TESTED } : model));
-  }, []);
-
-  const handleTestConnection = useCallback(async (modelId: string) => {
-    const model = models.find(m => m.id === modelId);
-    if (!model) return;
-    if (model.id === 'openai') {
-      if (!model.apiKey) {
-        toast.error(t('settings.models.testConnectionError'));
-        return;
-      }
-    } else if (model.id === 'doubao') {
-      if (!model.apiKey || !model.apiSecret || !model.arkApiKey) {
-        toast.error(t('settings.models.testConnectionError'));
-        return;
-      }
-    } else {
-      if (!model.apiKey || !model.apiSecret) {
-        toast.error(t('settings.models.testConnectionError'));
-        return;
-      }
-    }
-    setModels(prevModels =>
-      prevModels.map(m =>
-        m.id === modelId ? { ...m, isTesting: true, testStatus: TestStatus.TESTING } : m
-      )
-    );
-    try {
-      await new Promise(resolve => setTimeout(resolve, TEST_DELAY_MS));
-      const isSuccess = Math.random() > (1 - SUCCESS_RATE);
-      const testStatus = isSuccess ? TestStatus.TESTED_PASSED : TestStatus.TESTED_FAILED;
-      updateModelTestStatus(modelId, testStatus);
-      setModels(prevModels =>
-        prevModels.map(m =>
-          m.id === modelId ? { ...m, isTesting: false, testStatus } : m
+  const handleModelConfigChange = useCallback(
+    (
+      modelId: string,
+      field: 'apiKey' | 'apiSecret' | 'arkApiKey' | 'systemPrompt',
+      value: string
+    ) => {
+      setModels(models =>
+        models.map(model =>
+          model.id === modelId
+            ? { ...model, [field]: value, testStatus: TestStatus.NOT_TESTED }
+            : model
         )
       );
-      if (isSuccess) {
-        toast.success(t('settings.models.testConnectionSuccess'));
+    },
+    []
+  );
+
+  const handleTestConnection = useCallback(
+    async (modelId: string) => {
+      const model = models.find(m => m.id === modelId);
+      if (!model) return;
+      if (model.id === 'openai') {
+        if (!model.apiKey) {
+          toast.error(t('settings.models.testConnectionError'));
+          return;
+        }
+      } else if (model.id === 'doubao') {
+        if (!model.apiKey || !model.apiSecret || !model.arkApiKey) {
+          toast.error(t('settings.models.testConnectionError'));
+          return;
+        }
       } else {
-        toast.error(t('settings.models.testConnectionFailed'));
+        if (!model.apiKey || !model.apiSecret) {
+          toast.error(t('settings.models.testConnectionError'));
+          return;
+        }
       }
-    } catch (error) {
       setModels(prevModels =>
         prevModels.map(m =>
-          m.id === modelId ? { ...m, isTesting: false, testStatus: TestStatus.TESTED_FAILED } : m
+          m.id === modelId
+            ? { ...m, isTesting: true, testStatus: TestStatus.TESTING }
+            : m
         )
       );
-      toast.error(t('settings.models.testConnectionError'));
-    }
-  }, [models, t, updateModelTestStatus]);
+      try {
+        await new Promise(resolve => setTimeout(resolve, TEST_DELAY_MS));
+        const isSuccess = Math.random() > 1 - SUCCESS_RATE;
+        const testStatus = isSuccess
+          ? TestStatus.TESTED_PASSED
+          : TestStatus.TESTED_FAILED;
+        updateModelTestStatus(modelId, testStatus);
+        setModels(prevModels =>
+          prevModels.map(m =>
+            m.id === modelId ? { ...m, isTesting: false, testStatus } : m
+          )
+        );
+        if (isSuccess) {
+          toast.success(t('settings.models.testConnectionSuccess'));
+        } else {
+          toast.error(t('settings.models.testConnectionFailed'));
+        }
+      } catch (error) {
+        setModels(prevModels =>
+          prevModels.map(m =>
+            m.id === modelId
+              ? { ...m, isTesting: false, testStatus: TestStatus.TESTED_FAILED }
+              : m
+          )
+        );
+        toast.error(t('settings.models.testConnectionError'));
+      }
+    },
+    [models, t, updateModelTestStatus]
+  );
 
-  const handleToggleExpand = useCallback((modelId: string) => {
-    const currentModel = models.find(m => m.id === modelId);
-    const willExpand = !currentModel?.isExpanded;
-    
-    if (willExpand) {
-      // 立即展开
-      setModels(prevModels => 
-        prevModels.map(m => ({
-          ...m,
-          isExpanded: m.id === modelId ? true : false,
-        }))
-      );
-    } else {
-      setModels(prevModels => 
-        prevModels.map(m => ({
-          ...m,
-          isExpanded: false,
-          // 只有在不处于编辑状态时才重置编辑状态
-          ...(m.id === modelId && !m.isEditing ? {
-            isEditing: false,
-            tempApiKey: m.apiKey,
-            tempApiSecret: m.apiSecret,
-            tempArkApiKey: m.arkApiKey ?? '',
-            tempSystemPrompt: m.systemPrompt,
-          } : {})
-        }))
-      );
-    }
-  }, [models]);
+  const handleToggleExpand = useCallback(
+    (modelId: string) => {
+      const currentModel = models.find(m => m.id === modelId);
+      const willExpand = !currentModel?.isExpanded;
 
-  const handleToggleApiKeyVisibility = useCallback((modelId: string, field: 'showApiKey' | 'showApiSecret' | 'showArkApiKey') => {
-    setModels(prevModels => 
-      prevModels.map(m => 
-        m.id === modelId ? { ...m, [field]: !m[field] } : m
-      )
-    );
-  }, []);
+      if (willExpand) {
+        // 立即展开
+        setModels(prevModels =>
+          prevModels.map(m => ({
+            ...m,
+            isExpanded: m.id === modelId ? true : false,
+          }))
+        );
+      } else {
+        setModels(prevModels =>
+          prevModels.map(m => ({
+            ...m,
+            isExpanded: false,
+            // 只有在不处于编辑状态时才重置编辑状态
+            ...(m.id === modelId && !m.isEditing
+              ? {
+                  isEditing: false,
+                  tempApiKey: m.apiKey,
+                  tempApiSecret: m.apiSecret,
+                  tempArkApiKey: m.arkApiKey ?? '',
+                  tempSystemPrompt: m.systemPrompt,
+                }
+              : {}),
+          }))
+        );
+      }
+    },
+    [models]
+  );
+
+  const handleToggleApiKeyVisibility = useCallback(
+    (
+      modelId: string,
+      field: 'showApiKey' | 'showApiSecret' | 'showArkApiKey'
+    ) => {
+      setModels(prevModels =>
+        prevModels.map(m =>
+          m.id === modelId ? { ...m, [field]: !m[field] } : m
+        )
+      );
+    },
+    []
+  );
 
   const handleShowModelDetail = useCallback((modelId: string) => {
     setSelectedModelForDetail(modelId);
@@ -268,79 +330,98 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
   }, []);
 
   const handleStartEditing = useCallback((modelId: string) => {
-    setModels(prevModels => 
+    setModels(prevModels =>
       prevModels.map(m => {
-        const updatedModel = m.id === modelId ? { 
-          ...m, 
-          isEditing: true,
-          tempApiKey: m.apiKey,
-          tempApiSecret: m.apiSecret,
-          tempArkApiKey: m.arkApiKey ?? '',
-          tempSystemPrompt: m.systemPrompt,
-        } : m;
+        const updatedModel =
+          m.id === modelId
+            ? {
+                ...m,
+                isEditing: true,
+                tempApiKey: m.apiKey,
+                tempApiSecret: m.apiSecret,
+                tempArkApiKey: m.arkApiKey ?? '',
+                tempSystemPrompt: m.systemPrompt,
+              }
+            : m;
         return updatedModel;
       })
     );
   }, []);
 
   const handleCancelEditing = useCallback((modelId: string) => {
-    setModels(prevModels => 
-      prevModels.map(m => 
-        m.id === modelId ? { 
-          ...m, 
-          isEditing: false,
-          tempApiKey: m.apiKey,
-          tempApiSecret: m.apiSecret,
-          tempArkApiKey: m.arkApiKey ?? '',
-          tempSystemPrompt: m.systemPrompt,
-        } : m
+    setModels(prevModels =>
+      prevModels.map(m =>
+        m.id === modelId
+          ? {
+              ...m,
+              isEditing: false,
+              tempApiKey: m.apiKey,
+              tempApiSecret: m.apiSecret,
+              tempArkApiKey: m.arkApiKey ?? '',
+              tempSystemPrompt: m.systemPrompt,
+            }
+          : m
       )
     );
   }, []);
 
-  const handleSaveEditing = useCallback(async (modelId: string) => {
-    if (!user?.id) return;
-    const model = models.find(m => m.id === modelId);
-    if (!model) return;
-    const updatedModels = models.map(m => 
-      m.id === modelId ? { 
-        ...m, 
-        isEditing: false,
-        apiKey: m.tempApiKey,
-        apiSecret: m.tempApiSecret,
-        arkApiKey: m.tempArkApiKey ?? '',
-        systemPrompt: m.tempSystemPrompt,
-        testStatus: TestStatus.NOT_TESTED, // Reset connection status when config changes
-      } : m
-    );
-    setModels(updatedModels);
-    try {
-      const updatedModel = updatedModels.find(m => m.id === modelId);
-      if (updatedModel) {
-        const configJson: any = {
-          api_key: updatedModel.apiKey,
-          api_secret: updatedModel.apiSecret,
-          system_prompt: updatedModel.systemPrompt,
-        };
-        if (modelId === 'doubao') {
-          configJson.ark_api_key = updatedModel.arkApiKey;
+  const handleSaveEditing = useCallback(
+    async (modelId: string) => {
+      if (!user?.id) return;
+      const model = models.find(m => m.id === modelId);
+      if (!model) return;
+      const updatedModels = models.map(m =>
+        m.id === modelId
+          ? {
+              ...m,
+              isEditing: false,
+              apiKey: m.tempApiKey,
+              apiSecret: m.tempApiSecret,
+              arkApiKey: m.tempArkApiKey ?? '',
+              systemPrompt: m.tempSystemPrompt,
+              testStatus: TestStatus.NOT_TESTED, // Reset connection status when config changes
+            }
+          : m
+      );
+      setModels(updatedModels);
+      try {
+        const updatedModel = updatedModels.find(m => m.id === modelId);
+        if (updatedModel) {
+          const configJson: any = {
+            api_key: updatedModel.apiKey,
+            api_secret: updatedModel.apiSecret,
+            system_prompt: updatedModel.systemPrompt,
+          };
+          if (modelId === 'doubao') {
+            configJson.ark_api_key = updatedModel.arkApiKey;
+          }
+          updateModelConfigJson(modelId, configJson);
         }
-        updateModelConfigJson(modelId, configJson);
+        toast.success(t('settings.models.configUpdated'));
+      } catch (error) {
+        console.error('Error updating model config:', error);
+        toast.error(t('settings.models.configUpdateFailed'));
       }
-      toast.success(t('settings.models.configUpdated'));
-    } catch (error) {
-      console.error('Error updating model config:', error);
-      toast.error(t('settings.models.configUpdateFailed'));
-    }
-  }, [models, user, t, updateModelConfigJson]);
+    },
+    [models, user, t, updateModelConfigJson]
+  );
 
-  const handleTempConfigChange = useCallback((modelId: string, field: 'tempApiKey' | 'tempApiSecret' | 'tempArkApiKey' | 'tempSystemPrompt', value: string) => {
-    setModels(prevModels => 
-      prevModels.map(m => 
-        m.id === modelId ? { ...m, [field]: value } : m
-      )
-    );
-  }, []);
+  const handleTempConfigChange = useCallback(
+    (
+      modelId: string,
+      field:
+        | 'tempApiKey'
+        | 'tempApiSecret'
+        | 'tempArkApiKey'
+        | 'tempSystemPrompt',
+      value: string
+    ) => {
+      setModels(prevModels =>
+        prevModels.map(m => (m.id === modelId ? { ...m, [field]: value } : m))
+      );
+    },
+    []
+  );
 
   // --- Side Effects ---
   useEffect(() => {
@@ -352,103 +433,139 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
 
   // --- Render Logic ---
   // Render API field (hidden/visible)
-  const renderApiField = useCallback((model: ModelConfig, field: 'apiKey' | 'apiSecret' | 'arkApiKey', showField: 'showApiKey' | 'showApiSecret' | 'showArkApiKey') => {
-    const value = model.isEditing ? model[field === 'apiKey' ? 'tempApiKey' : field === 'apiSecret' ? 'tempApiSecret' : 'tempArkApiKey'] : model[field];
-    const isVisible = model[showField] ?? false;
-    const isDisabled = !model.isEditing;
-    return (
-      <div className="relative">
-        <div className="flex items-center">
-          <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-            {field === 'apiKey' ? (
-              <KeyIcon className="h-4 w-4 text-gray-400" />
-            ) : field === 'apiSecret' ? (
-              <ShieldCheckIcon className="h-4 w-4 text-gray-400" />
-            ) : (
-              <KeyIcon className="h-4 w-4 text-green-400" />
-            )}
-          </div>
-          <input
-            type={isVisible ? "text" : "password"}
-            value={value}
-            onChange={(e) => {
-              if (model.isEditing) {
-                handleTempConfigChange(model.id, field === 'apiKey' ? 'tempApiKey' : field === 'apiSecret' ? 'tempApiSecret' : 'tempArkApiKey', e.target.value);
-              } else {
-                handleModelConfigChange(model.id, field, e.target.value);
+  const renderApiField = useCallback(
+    (
+      model: ModelConfig,
+      field: 'apiKey' | 'apiSecret' | 'arkApiKey',
+      showField: 'showApiKey' | 'showApiSecret' | 'showArkApiKey'
+    ) => {
+      const value = model.isEditing
+        ? model[
+            field === 'apiKey'
+              ? 'tempApiKey'
+              : field === 'apiSecret'
+                ? 'tempApiSecret'
+                : 'tempArkApiKey'
+          ]
+        : model[field];
+      const isVisible = model[showField] ?? false;
+      const isDisabled = !model.isEditing;
+      return (
+        <div className="relative">
+          <div className="flex items-center">
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+              {field === 'apiKey' ? (
+                <KeyIcon className="h-4 w-4 text-gray-400" />
+              ) : field === 'apiSecret' ? (
+                <ShieldCheckIcon className="h-4 w-4 text-gray-400" />
+              ) : (
+                <KeyIcon className="h-4 w-4 text-green-400" />
+              )}
+            </div>
+            <input
+              type={isVisible ? 'text' : 'password'}
+              value={value}
+              onChange={e => {
+                if (model.isEditing) {
+                  handleTempConfigChange(
+                    model.id,
+                    field === 'apiKey'
+                      ? 'tempApiKey'
+                      : field === 'apiSecret'
+                        ? 'tempApiSecret'
+                        : 'tempArkApiKey',
+                    e.target.value
+                  );
+                } else {
+                  handleModelConfigChange(model.id, field, e.target.value);
+                }
+              }}
+              disabled={isDisabled}
+              placeholder={
+                field === 'apiKey'
+                  ? t('settings.models.table.apiKeyPlaceholder')
+                  : field === 'apiSecret'
+                    ? t('settings.models.table.apiSecretPlaceholder')
+                    : 'Ark API Key'
               }
-            }}
-            disabled={isDisabled}
-            placeholder={
-              field === 'apiKey'
-                ? t('settings.models.table.apiKeyPlaceholder')
-                : field === 'apiSecret'
-                ? t('settings.models.table.apiSecretPlaceholder')
-                : 'Ark API Key'
-            }
-            className={`block w-full pl-10 pr-12 py-3 border border-gray-200 dark:border-gray-600 rounded-xl shadow-sm placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
-              isDisabled ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-700' : ''
-            }`}
-          />
-          <button
-            type="button"
-            onClick={() => handleToggleApiKeyVisibility(model.id, showField)}
-            className='absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700'
-          >
-            {isVisible ? (
-              <EyeSlashIcon className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-            ) : (
-              <EyeIcon className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-            )}
-          </button>
+              className={`block w-full pl-10 pr-12 py-3 border border-gray-200 dark:border-gray-600 rounded-xl shadow-sm placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 transition-all duration-200 ${
+                isDisabled
+                  ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-700'
+                  : ''
+              }`}
+            />
+            <button
+              type="button"
+              onClick={() => handleToggleApiKeyVisibility(model.id, showField)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              {isVisible ? (
+                <EyeSlashIcon className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+              ) : (
+                <EyeIcon className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+              )}
+            </button>
+          </div>
         </div>
-      </div>
-    );
-  }, [handleTempConfigChange, handleModelConfigChange, t, handleToggleApiKeyVisibility]);
+      );
+    },
+    [
+      handleTempConfigChange,
+      handleModelConfigChange,
+      t,
+      handleToggleApiKeyVisibility,
+    ]
+  );
 
   // Render status badge
-  const renderStatusBadge = useCallback((model: ModelConfig) => {
-    if (model.isTesting) {
+  const renderStatusBadge = useCallback(
+    (model: ModelConfig) => {
+      if (model.isTesting) {
+        return (
+          <div className="flex items-center px-3 py-1 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-full">
+            <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mr-2" />
+            <span className="text-xs font-medium text-blue-700 dark:text-blue-300">
+              {t('settings.models.table.testing')}
+            </span>
+          </div>
+        );
+      }
+
+      if (
+        model.testStatus === null ||
+        model.testStatus === TestStatus.NOT_TESTED
+      ) {
+        return (
+          <div className="px-3 py-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full">
+            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+              {t('settings.models.table.notTested')}
+            </span>
+          </div>
+        );
+      }
+
+      if (model.testStatus === TestStatus.TESTED_PASSED) {
+        return (
+          <div className="flex items-center px-3 py-1 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full">
+            <CheckCircleIcon className="w-3 h-3 text-green-500 mr-1" />
+            <span className="text-xs font-medium text-green-700 dark:text-green-300">
+              {t('settings.models.table.connected')}
+            </span>
+          </div>
+        );
+      }
+
       return (
-        <div className="flex items-center px-3 py-1 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-full">
-          <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mr-2" />
-          <span className="text-xs font-medium text-blue-700 dark:text-blue-300">
-            {t('settings.models.table.testing')}
+        <div className="flex items-center px-3 py-1 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-full">
+          <XCircleIcon className="w-3 h-3 text-red-500 mr-1" />
+          <span className="text-xs font-medium text-red-700 dark:text-red-300">
+            {t('settings.models.table.failed')}
           </span>
         </div>
       );
-    }
-    
-    if (model.testStatus === null || model.testStatus === TestStatus.NOT_TESTED) {
-      return (
-        <div className="px-3 py-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full">
-          <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
-            {t('settings.models.table.notTested')}
-          </span>
-        </div>
-      );
-    }
-    
-    if (model.testStatus === TestStatus.TESTED_PASSED) {
-      return (
-        <div className="flex items-center px-3 py-1 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full">
-          <CheckCircleIcon className="w-3 h-3 text-green-500 mr-1" />
-          <span className="text-xs font-medium text-green-700 dark:text-green-300">
-            {t('settings.models.table.connected')}
-          </span>
-        </div>
-      );
-    }
-    
-    return (
-      <div className="flex items-center px-3 py-1 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-full">
-        <XCircleIcon className="w-3 h-3 text-red-500 mr-1" />
-        <span className="text-xs font-medium text-red-700 dark:text-red-300">
-          {t('settings.models.table.failed')}
-        </span>
-      </div>
-    );
-  }, [t]);
+    },
+    [t]
+  );
 
   return (
     <>
@@ -462,10 +579,10 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
       >
         <div className="space-y-6">
           {/* Header Section */}
-          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-2xl p-6 border border-indigo-100 dark:border-indigo-800">
+          <div className="bg-gradient-to-r from-zinc-100 to-zinc-200 dark:from-zinc-800/50 dark:to-zinc-700/50 rounded-2xl p-6 border border-zinc-200 dark:border-zinc-700">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-indigo-100 dark:bg-indigo-800 rounded-xl">
-                <Cog6ToothIcon className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+              <div className="p-2 bg-zinc-200 dark:bg-zinc-700 rounded-xl">
+                <Cog6ToothIcon className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
               </div>
               <div>
                 <h3 className="text-md font-semibold text-gray-900 dark:text-white">
@@ -480,7 +597,7 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
 
           {/* Models Grid */}
           <div className="grid gap-6">
-            {models.map((model) => (
+            {models.map(model => (
               <motion.div
                 key={model.id}
                 layout
@@ -495,10 +612,12 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
                     <div className="flex items-center space-x-4">
                       {/* Toggle Switch */}
                       <button
-                        onClick={() => handleModelToggle(model.id, !model.enabled)}
-                        className={`relative inline-flex h-7 w-14 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
-                          model.enabled 
-                            ? 'bg-gradient-to-r from-indigo-500 to-purple-500' 
+                        onClick={() =>
+                          handleModelToggle(model.id, !model.enabled)
+                        }
+                        className={`relative inline-flex h-7 w-14 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 ${
+                          model.enabled
+                            ? 'bg-zinc-700 dark:bg-zinc-600'
                             : 'bg-gray-200 dark:bg-gray-700'
                         }`}
                         role="switch"
@@ -518,7 +637,9 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
                           {model.name}
                         </h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {model.enabled ? t('settings.models.enabled') : t('settings.models.disabled')}
+                          {model.enabled
+                            ? t('settings.models.enabled')
+                            : t('settings.models.disabled')}
                         </p>
                       </div>
                     </div>
@@ -531,7 +652,7 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => handleTestConnection(model.id)}
-                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-zinc-700 hover:bg-zinc-800 dark:bg-zinc-600 dark:hover:bg-zinc-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           {model.isTesting ? (
                             <>
@@ -545,7 +666,7 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
 
                         <button
                           onClick={() => handleShowModelDetail(model.id)}
-                          className="inline-flex items-center px-4 py-2 border border-gray-200 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="inline-flex items-center px-4 py-2 border border-gray-200 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <InformationCircleIcon className="w-4 h-4 mr-2" />
                           {t('settings.models.table.modelDetail')}
@@ -553,7 +674,7 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
 
                         <button
                           onClick={() => handleToggleExpand(model.id)}
-                          className="inline-flex items-center px-4 py-2 border border-gray-200 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="inline-flex items-center px-4 py-2 border border-gray-200 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <motion.div
                             animate={{ rotate: model.isExpanded ? 90 : 0 }}
@@ -562,11 +683,9 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
                           >
                             <ChevronRightIcon className="w-4 h-4" />
                           </motion.div>
-                          {model.isExpanded ? (
-                            t('settings.models.table.hideDetails')
-                          ) : (
-                            t('settings.models.table.showDetails')
-                          )}
+                          {model.isExpanded
+                            ? t('settings.models.table.hideDetails')
+                            : t('settings.models.table.showDetails')}
                         </button>
                       </div>
                     </div>
@@ -581,9 +700,9 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
                       initial={{ opacity: 0, maxHeight: 0 }}
                       animate={{ opacity: 1, maxHeight: 500 }}
                       exit={{ opacity: 0, maxHeight: 0 }}
-                      transition={{ 
+                      transition={{
                         duration: 0.3,
-                        ease: "easeInOut"
+                        ease: 'easeInOut',
                       }}
                       className="bg-gray-50 dark:bg-gray-900/50 overflow-hidden"
                     >
@@ -597,10 +716,20 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
                             {!model.isEditing ? (
                               <button
                                 onClick={() => handleStartEditing(model.id)}
-                                className="inline-flex items-center px-4 py-2 border border-gray-200 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                                className="inline-flex items-center px-4 py-2 border border-gray-200 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 transition-all duration-200 shadow-sm hover:shadow-md"
                               >
-                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                <svg
+                                  className="w-4 h-4 mr-2"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                  />
                                 </svg>
                                 {t('settings.models.edit')}
                               </button>
@@ -608,19 +737,39 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
                               <>
                                 <button
                                   onClick={() => handleCancelEditing(model.id)}
-                                  className="inline-flex items-center px-4 py-2 border border-gray-200 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                                  className="inline-flex items-center px-4 py-2 border border-gray-200 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 transition-all duration-200 shadow-sm hover:shadow-md"
                                 >
-                                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                  <svg
+                                    className="w-4 h-4 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M6 18L18 6M6 6l12 12"
+                                    />
                                   </svg>
                                   {t('settings.models.cancel')}
                                 </button>
                                 <button
                                   onClick={() => handleSaveEditing(model.id)}
-                                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-zinc-700 hover:bg-zinc-800 dark:bg-zinc-600 dark:hover:bg-zinc-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 transition-all duration-200 shadow-sm hover:shadow-md"
                                 >
-                                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                  <svg
+                                    className="w-4 h-4 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M5 13l4 4L19 7"
+                                    />
                                   </svg>
                                   {t('settings.models.save')}
                                 </button>
@@ -645,7 +794,11 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
                               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 {t('settings.models.table.apiSecret')}
                               </label>
-                              {renderApiField(model, 'apiSecret', 'showApiSecret')}
+                              {renderApiField(
+                                model,
+                                'apiSecret',
+                                'showApiSecret'
+                              )}
                             </div>
                           )}
 
@@ -655,7 +808,11 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
                               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 Ark API Key
                               </label>
-                              {renderApiField(model, 'arkApiKey', 'showArkApiKey')}
+                              {renderApiField(
+                                model,
+                                'arkApiKey',
+                                'showArkApiKey'
+                              )}
                             </div>
                           )}
                         </div>
@@ -669,19 +826,35 @@ export const ModelConfigModal: FC<ModelConfigModalProps> = ({ isOpen, onClose })
                             </span>
                           </label>
                           <textarea
-                            value={model.isEditing ? model.tempSystemPrompt : model.systemPrompt}
-                            onChange={(e) => {
+                            value={
+                              model.isEditing
+                                ? model.tempSystemPrompt
+                                : model.systemPrompt
+                            }
+                            onChange={e => {
                               if (model.isEditing) {
-                                handleTempConfigChange(model.id, 'tempSystemPrompt', e.target.value);
+                                handleTempConfigChange(
+                                  model.id,
+                                  'tempSystemPrompt',
+                                  e.target.value
+                                );
                               } else {
-                                handleModelConfigChange(model.id, 'systemPrompt', e.target.value);
+                                handleModelConfigChange(
+                                  model.id,
+                                  'systemPrompt',
+                                  e.target.value
+                                );
                               }
                             }}
                             disabled={!model.isEditing}
-                            placeholder={t('settings.models.table.systemPromptPlaceholder')}
+                            placeholder={t(
+                              'settings.models.table.systemPromptPlaceholder'
+                            )}
                             rows={4}
-                            className={`block w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl shadow-sm placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none transition-all duration-200 ${
-                              !model.isEditing ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-700' : ''
+                            className={`block w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl shadow-sm placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 resize-none transition-all duration-200 ${
+                              !model.isEditing
+                                ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-700'
+                                : ''
                             }`}
                           />
                         </div>

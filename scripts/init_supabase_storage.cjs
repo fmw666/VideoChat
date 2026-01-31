@@ -6,7 +6,7 @@
  * @date 2025-07-01
  *
  * This script connects to a Supabase instance and creates the required storage buckets
- * for the DesignChat application. It is intended for development and deployment automation.
+ * for the VideoChat application. It is intended for development and deployment automation.
  *
  * Usage:
  *   1. Ensure you have the correct Supabase URL and anon key.
@@ -27,7 +27,7 @@ const supabaseServiceKey = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 /**
- * Storage bucket configurations for the DesignChat application
+ * Storage bucket configurations for the VideoChat application
  */
 const bucketConfigs = [
   {
@@ -48,7 +48,7 @@ const bucketConfigs = [
       ],
       fileSizeLimit: '50MB', // Supabase 免费计划最大 50MB
     },
-    description: 'General assets (images and videos) for DesignChat'
+    description: 'General assets (images and videos) for VideoChat',
   },
 ];
 
@@ -62,22 +62,30 @@ const bucketConfigs = [
 async function createBucket(bucketName, options, description) {
   try {
     console.log(`[INFO] Creating bucket '${bucketName}' (${description})...`);
-    
-    const { data, error } = await supabase.storage.createBucket(bucketName, options);
-    
+
+    const { data, error } = await supabase.storage.createBucket(
+      bucketName,
+      options
+    );
+
     if (error) {
       if (error.message.includes('already exists')) {
-        console.log(`[INFO] Bucket '${bucketName}' already exists, attempting to update...`);
+        console.log(
+          `[INFO] Bucket '${bucketName}' already exists, attempting to update...`
+        );
         // 尝试更新现有 bucket 的配置
         return await updateBucket(bucketName, options);
       }
       throw error;
     }
-    
+
     console.log(`[INFO] Bucket '${bucketName}' created successfully:`, data);
     return { success: true, data };
   } catch (error) {
-    console.error(`[ERROR] Failed to create bucket '${bucketName}':`, error.message);
+    console.error(
+      `[ERROR] Failed to create bucket '${bucketName}':`,
+      error.message
+    );
     return { success: false, error };
   }
 }
@@ -91,17 +99,23 @@ async function createBucket(bucketName, options, description) {
 async function updateBucket(bucketName, options) {
   try {
     console.log(`[INFO] Updating bucket '${bucketName}' configuration...`);
-    
-    const { data, error } = await supabase.storage.updateBucket(bucketName, options);
-    
+
+    const { data, error } = await supabase.storage.updateBucket(
+      bucketName,
+      options
+    );
+
     if (error) {
       throw error;
     }
-    
+
     console.log(`[INFO] Bucket '${bucketName}' updated successfully:`, data);
     return { success: true, data, updated: true };
   } catch (error) {
-    console.error(`[ERROR] Failed to update bucket '${bucketName}':`, error.message);
+    console.error(
+      `[ERROR] Failed to update bucket '${bucketName}':`,
+      error.message
+    );
     return { success: false, error };
   }
 }
@@ -113,26 +127,33 @@ async function updateBucket(bucketName, options) {
  */
 async function setStoragePolicies(bucketName, policies) {
   try {
-    console.log(`[INFO] Setting storage policies for bucket '${bucketName}'...`);
-    
+    console.log(
+      `[INFO] Setting storage policies for bucket '${bucketName}'...`
+    );
+
     // Use the PostgreSQL client for policy creation
     const { Client } = require('pg');
     const client = new Client({
       connectionString: process.env.VITE_SUPABASE_POSTGRES_URL,
     });
-    
+
     await client.connect();
-    
+
     // First, enable RLS on storage.objects if not already enabled
     try {
-      await client.query('ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;');
+      await client.query(
+        'ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;'
+      );
       console.log('[INFO] Row Level Security enabled on storage.objects');
     } catch (error) {
       if (!error.message.includes('already enabled')) {
-        console.warn('[WARN] Could not enable RLS on storage.objects:', error.message);
+        console.warn(
+          '[WARN] Could not enable RLS on storage.objects:',
+          error.message
+        );
       }
     }
-    
+
     // Drop existing policies for this bucket to avoid conflicts
     try {
       await client.query(`
@@ -145,9 +166,9 @@ async function setStoragePolicies(bucketName, policies) {
     } catch (error) {
       console.warn('[WARN] Could not drop existing policies:', error.message);
     }
-    
+
     const results = [];
-    
+
     // Create policies one by one with proper error handling
     const policyQueries = [
       {
@@ -157,7 +178,7 @@ async function setStoragePolicies(bucketName, policies) {
           FOR INSERT
           TO authenticated
           WITH CHECK (bucket_id = '${bucketName}' AND auth.role() = 'authenticated');
-        `
+        `,
       },
       {
         name: 'Allow authenticated downloads',
@@ -166,7 +187,7 @@ async function setStoragePolicies(bucketName, policies) {
           FOR SELECT
           TO authenticated
           USING (bucket_id = '${bucketName}' AND auth.role() = 'authenticated');
-        `
+        `,
       },
       {
         name: 'Allow users to update own files',
@@ -175,7 +196,7 @@ async function setStoragePolicies(bucketName, policies) {
           FOR UPDATE
           TO authenticated
           USING (bucket_id = '${bucketName}' AND auth.uid()::text = (storage.foldername(name))[1]);
-        `
+        `,
       },
       {
         name: 'Allow users to delete own files',
@@ -184,31 +205,38 @@ async function setStoragePolicies(bucketName, policies) {
           FOR DELETE
           TO authenticated
           USING (bucket_id = '${bucketName}' AND auth.uid()::text = (storage.foldername(name))[1]);
-        `
-      }
+        `,
+      },
     ];
-    
+
     for (const policyQuery of policyQueries) {
       try {
         console.log(`[INFO] Creating policy: ${policyQuery.name}`);
         const result = await client.query(policyQuery.sql);
         results.push({ policy: policyQuery.name, success: true, result });
       } catch (error) {
-        console.error(`[ERROR] Failed to create policy '${policyQuery.name}':`, error.message);
+        console.error(
+          `[ERROR] Failed to create policy '${policyQuery.name}':`,
+          error.message
+        );
         results.push({ policy: policyQuery.name, success: false, error });
       }
     }
-    
+
     await client.end();
-    
+
     const successful = results.filter(r => r.success).length;
     const failed = results.filter(r => !r.success).length;
-    
-    console.log(`[INFO] Storage policies summary: ${successful} successful, ${failed} failed`);
+
+    console.log(
+      `[INFO] Storage policies summary: ${successful} successful, ${failed} failed`
+    );
     return { success: failed === 0, results };
-    
   } catch (error) {
-    console.error(`[ERROR] Failed to set storage policies for bucket '${bucketName}':`, error.message);
+    console.error(
+      `[ERROR] Failed to set storage policies for bucket '${bucketName}':`,
+      error.message
+    );
     return { success: false, error };
   }
 }
@@ -221,12 +249,12 @@ async function listBuckets() {
   try {
     console.log('[INFO] Listing existing buckets...');
     const { data, error } = await supabase.storage.listBuckets();
-    
+
     if (error) {
       console.error('[ERROR] Failed to list buckets:', error.message);
       return;
     }
-    
+
     console.log('[INFO] Existing buckets:');
     data.forEach(bucket => {
       console.log(`  - ${bucket.name} (public: ${bucket.public})`);
@@ -247,47 +275,56 @@ async function main() {
   try {
     console.log('[INFO] Initializing Supabase storage buckets...');
     console.log(`[INFO] Using Supabase URL: ${supabaseUrl}`);
-    
+
     // List existing buckets first
     await listBuckets();
-    
+
     console.log('\n[INFO] Creating configured buckets...');
-    
+
     // Create all configured buckets
     const results = [];
     for (const config of bucketConfigs) {
-      const result = await createBucket(config.name, config.options, config.description);
+      const result = await createBucket(
+        config.name,
+        config.options,
+        config.description
+      );
       results.push({ bucket: config.name, ...result });
-      
+
       // Set storage policies if bucket was created successfully
       if (result.success) {
-        console.log(`\n[INFO] Setting up storage policies for bucket '${config.name}'...`);
+        console.log(
+          `\n[INFO] Setting up storage policies for bucket '${config.name}'...`
+        );
         const policyResult = await setStoragePolicies(config.name);
-        
+
         if (policyResult.success) {
-          console.log(`[INFO] ✅ Storage policies set successfully for bucket '${config.name}'`);
+          console.log(
+            `[INFO] ✅ Storage policies set successfully for bucket '${config.name}'`
+          );
         } else {
-          console.error(`[ERROR] ❌ Failed to set some storage policies for bucket '${config.name}'`);
+          console.error(
+            `[ERROR] ❌ Failed to set some storage policies for bucket '${config.name}'`
+          );
         }
       }
     }
-    
+
     // Summary
     console.log('\n[INFO] Storage initialization summary:');
     const successful = results.filter(r => r.success).length;
     const failed = results.filter(r => !r.success).length;
-    
+
     console.log(`  - Successfully created/verified: ${successful} buckets`);
     if (failed > 0) {
       console.log(`  - Failed to create: ${failed} buckets`);
     }
-    
+
     // List buckets again to show final state
     console.log('\n[INFO] Final bucket list:');
     await listBuckets();
-    
+
     console.log('\n[INFO] Storage initialization completed.');
-    
   } catch (error) {
     console.error('[ERROR] Error initializing storage:', error);
     process.exit(1);

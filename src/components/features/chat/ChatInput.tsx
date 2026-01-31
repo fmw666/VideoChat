@@ -196,7 +196,7 @@ const ImageSlot: FC<{
           className={`w-12 h-12 rounded-lg border-2 border-dashed ${effectiveBorderColor} flex items-center justify-center flex-shrink-0 transition-colors ${
             disabled
               ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-800/50'
-              : 'hover:border-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20'
+              : 'hover:border-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/20'
           }`}
         >
           <svg
@@ -354,7 +354,7 @@ const ImagePreviewRow: FC<{
             className={`w-12 h-12 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center flex-shrink-0 transition-colors ${
               disabled
                 ? 'opacity-50 cursor-not-allowed'
-                : 'hover:border-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20'
+                : 'hover:border-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/20'
             }`}
           >
             <svg
@@ -515,7 +515,7 @@ const VideoConfigPanel: FC<{
             <select
               value={config.resolution || '1080P'}
               onChange={e => handleChange('resolution', e.target.value)}
-              className="w-full px-2 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+              className="w-full px-2 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-zinc-500/20 focus:border-zinc-500"
             >
               {commonResolutions.map(res => (
                 <option key={res} value={res}>
@@ -533,7 +533,7 @@ const VideoConfigPanel: FC<{
             <select
               value={config.aspectRatio || '16:9'}
               onChange={e => handleChange('aspectRatio', e.target.value)}
-              className="w-full px-2 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+              className="w-full px-2 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-zinc-500/20 focus:border-zinc-500"
             >
               {commonAspectRatios.map(ratio => (
                 <option key={ratio} value={ratio}>
@@ -551,7 +551,7 @@ const VideoConfigPanel: FC<{
             <select
               value={config.enhanceSwitch || 'Disabled'}
               onChange={e => handleChange('enhanceSwitch', e.target.value)}
-              className="w-full px-2 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+              className="w-full px-2 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-zinc-500/20 focus:border-zinc-500"
             >
               <option value="Enabled">{t('common.enabled', '开启')}</option>
               <option value="Disabled">{t('common.disabled', '关闭')}</option>
@@ -566,7 +566,7 @@ const VideoConfigPanel: FC<{
             <select
               value={config.audioGeneration || 'Disabled'}
               onChange={e => handleChange('audioGeneration', e.target.value)}
-              className="w-full px-2 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+              className="w-full px-2 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-zinc-500/20 focus:border-zinc-500"
             >
               <option value="Enabled">{t('common.enabled', '开启')}</option>
               <option value="Disabled">{t('common.disabled', '关闭')}</option>
@@ -591,7 +591,7 @@ const VideoConfigPanel: FC<{
             'videoConfig.negativePromptPlaceholder',
             '例如：模糊、低质量、变形...'
           )}
-          className="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+          className="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-zinc-500/20 focus:border-zinc-500"
         />
       </div>
 
@@ -928,7 +928,10 @@ export const ChatInput: FC<ChatInputProps> = ({
                     <>
                       <span className="mx-1">·</span>
                       <span className="text-amber-500 dark:text-amber-400">
-                        {t('chat.input.lastFrameHint', '尾帧：若模型不支持则不上传')}
+                        {t(
+                          'chat.input.lastFrameHint',
+                          '尾帧：若模型不支持则不上传'
+                        )}
                       </span>
                     </>
                   )}
@@ -951,7 +954,7 @@ export const ChatInput: FC<ChatInputProps> = ({
                 disabled={isGenerating || uploadedImages.length >= maxImages}
                 className={`p-2 rounded-lg transition-colors ${
                   hasUploadedImages
-                    ? 'text-indigo-600 dark:text-indigo-400'
+                    ? 'text-zinc-700 dark:text-zinc-300'
                     : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                 } ${isGenerating || uploadedImages.length >= maxImages ? 'opacity-50 cursor-not-allowed' : ''}`}
                 title={t('chat.input.uploadImage', '上传图片')}
@@ -969,7 +972,7 @@ export const ChatInput: FC<ChatInputProps> = ({
                   disabled={isGenerating}
                   className={`p-2 rounded-lg transition-colors ${
                     showSettings
-                      ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30'
+                      ? 'text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800/30'
                       : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                   } ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
                   title={t('chat.input.videoSettings', '视频设置')}
@@ -1031,7 +1034,7 @@ export const ChatInput: FC<ChatInputProps> = ({
                     : t('chat.placeholderLogin')
               }
               disabled={isSending || isGenerating}
-              className={`w-full max-h-[200px] py-3 pl-4 pr-12 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 resize-none overflow-hidden ease-in-out ${
+              className={`w-full max-h-[200px] py-3 pl-4 pr-12 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm outline-none focus:ring-2 focus:ring-zinc-500/20 focus:border-zinc-500 resize-none overflow-hidden ease-in-out ${
                 isSending || isGenerating ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               rows={1}
@@ -1046,12 +1049,12 @@ export const ChatInput: FC<ChatInputProps> = ({
                 isSending ||
                 isGenerating
               }
-              className="absolute right-2 bottom-2 p-2 text-indigo-500 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-500 disabled:text-indigo-400 disabled:cursor-not-allowed transition-colors duration-200 rounded-lg disabled:hover:bg-transparent"
+              className="absolute right-2 bottom-2 p-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 disabled:text-zinc-400 disabled:cursor-not-allowed transition-colors duration-200 rounded-lg disabled:hover:bg-transparent"
             >
               {isSending ? (
-                <div className="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-zinc-500 border-t-transparent rounded-full animate-spin" />
               ) : isGenerating ? (
-                <SparklesIcon className="h-5 w-5 animate-pulse text-indigo-500" />
+                <SparklesIcon className="h-5 w-5 animate-pulse text-zinc-500" />
               ) : (
                 <PaperAirplaneIcon className="h-5 w-5" />
               )}
@@ -1104,14 +1107,14 @@ export const ChatInput: FC<ChatInputProps> = ({
               {t('chat.input.ctrlEnterToNewLine')}
             </span>
             {designImage ? (
-              <span className="flex items-center text-indigo-600 dark:text-indigo-400">
+              <span className="flex items-center text-zinc-600 dark:text-zinc-400">
                 <SparklesIcon className="h-4 w-4 mr-1" />
                 {t('chat.input.designMode', '图片编辑模式')}
               </span>
             ) : (
               <>
                 {hasUploadedImages && (
-                  <span className="flex items-center text-purple-600 dark:text-purple-400">
+                  <span className="flex items-center text-amber-600 dark:text-amber-400">
                     <PhotoIcon className="h-4 w-4 mr-1" />
                     {t('chat.input.i2vMode', '图生视频模式')}
                   </span>
@@ -1127,7 +1130,7 @@ export const ChatInput: FC<ChatInputProps> = ({
                     </span>
                   )}
                 {isGenerating && (
-                  <span className="flex items-center text-indigo-600 dark:text-indigo-400">
+                  <span className="flex items-center text-zinc-600 dark:text-zinc-400">
                     <SparklesIcon className="h-4 w-4 mr-1 animate-pulse" />
                     {t('chat.input.generating')}
                   </span>

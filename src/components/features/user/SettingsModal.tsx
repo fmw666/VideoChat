@@ -18,7 +18,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 // --- Third-party Libraries ---
-import { MoonIcon, GlobeAltIcon, SunIcon, InformationCircleIcon, Cog6ToothIcon, ServerIcon } from '@heroicons/react/24/outline';
+import { MoonIcon, GlobeAltIcon, SunIcon, InformationCircleIcon, ServerIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // --- Internal Libraries ---
@@ -36,7 +36,7 @@ import { useThemeStore } from '@/styles/theme';
 
 // --- Relative Imports ---
 import ArchivedChatsModal from './ArchivedChatsModal';
-import ModelConfigModal from './ModelConfigModal';
+import ModelPreferencesModal from './ModelPreferencesModal';
 
 // =================================================================================================
 // Type Definitions
@@ -63,7 +63,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   // --- State and Refs ---
   const [isUpdatingModelInfo, setIsUpdatingModelInfo] = useState(false);
   const [isHideModelInfo, setIsHideModelInfo] = useState(false);
-  const [showModelConfigModal, setShowModelConfigModal] = useState(false);
+  const [showModelPreferencesModal, setShowModelPreferencesModal] = useState(false);
   const [showArchivedChatsModal, setShowArchivedChatsModal] = useState(false);
   const [showArchiveAllConfirm, setShowArchiveAllConfirm] = useState(false);
   const [isArchivingAll, setIsArchivingAll] = useState(false);
@@ -132,19 +132,10 @@ export const SettingsModal: FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   }, [user]);
 
   // --- Render Logic ---
-  // Get configured models count
-  const configuredModelsCount = useMemo(() => {
-    return user?.user_metadata?.modelConfigs 
-      ? Object.values(user.user_metadata.modelConfigs).filter((config: any) => 
-          config.enabled && config.apiKey && config.apiSecret
-        ).length 
-      : 0;
-  }, [user?.user_metadata?.modelConfigs]);
-
   // Tab configuration
   const tabs: TabItem[] = useMemo(() => [
     { id: 'general', label: t('settings.tabs.general'), icon: SunIcon },
-    { id: 'models', label: t('settings.tabs.models'), icon: Cog6ToothIcon },
+    { id: 'models', label: t('settings.tabs.models'), icon: AdjustmentsHorizontalIcon },
     { id: 'data', label: t('settings.tabs.data'), icon: ServerIcon },
   ], [t]);
 
@@ -167,7 +158,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({ isOpen, onClose }) => {
                 {theme === 'light' ? (
                   <SunIcon className="w-5 h-5 text-yellow-500" />
                 ) : (
-                  <MoonIcon className="w-5 h-5 text-indigo-400" />
+                  <MoonIcon className="w-5 h-5 text-zinc-500 dark:text-zinc-400" />
                 )}
                 <div>
                   <div className="text-sm font-medium text-gray-900 dark:text-white">{t('settings.theme.title')}</div>
@@ -176,8 +167,8 @@ export const SettingsModal: FC<SettingsModalProps> = ({ isOpen, onClose }) => {
               </div>
               <button
                 onClick={toggleTheme}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
-                  theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-200 dark:bg-gray-700'
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 ${
+                  theme === 'dark' ? 'bg-zinc-700' : 'bg-gray-200 dark:bg-gray-700'
                 }`}
                 role="switch"
                 aria-checked={theme === 'dark'}
@@ -204,7 +195,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({ isOpen, onClose }) => {
               </div>
               <button 
                 onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'zh' : 'en')}
-                className="text-sm text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+                className="text-sm text-zinc-700 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
               >
                 {t('common.change')}
               </button>
@@ -224,8 +215,8 @@ export const SettingsModal: FC<SettingsModalProps> = ({ isOpen, onClose }) => {
               <button
                 onClick={handleToggleModelInfo}
                 disabled={isUpdatingModelInfo}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
-                  !isHideModelInfo ? 'bg-indigo-600' : 'bg-gray-200 dark:bg-gray-700'
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 ${
+                  !isHideModelInfo ? 'bg-zinc-700' : 'bg-gray-200 dark:bg-gray-700'
                 } disabled:opacity-50 disabled:cursor-not-allowed`}
                 role="switch"
                 aria-checked={!isHideModelInfo}
@@ -257,25 +248,22 @@ export const SettingsModal: FC<SettingsModalProps> = ({ isOpen, onClose }) => {
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="space-y-3 pr-2"
           >
-            {/* Model configuration */}
+            {/* Model Preferences */}
             <div className="flex items-center justify-between p-2.5 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <div className="flex items-center gap-3">
-                <Cog6ToothIcon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                <AdjustmentsHorizontalIcon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                 <div>
-                  <div className="text-sm font-medium text-gray-900 dark:text-white">{t('settings.modelConfig.title')}</div>
+                  <div className="text-sm font-medium text-gray-900 dark:text-white">{t('settings.modelPreferences.title')}</div>
                   <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    {configuredModelsCount > 0 
-                      ? t('settings.modelConfig.configured', { count: configuredModelsCount })
-                      : t('settings.modelConfig.notConfigured')
-                    }
+                    {t('settings.modelPreferences.description')}
                   </div>
                 </div>
               </div>
               <button
-                onClick={() => setShowModelConfigModal(true)}
+                onClick={() => setShowModelPreferencesModal(true)}
                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
               >
-                {t('settings.modelConfig.configureButton')}
+                {t('settings.modelPreferences.configure')}
               </button>
             </div>
           </motion.div>
@@ -370,7 +358,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({ isOpen, onClose }) => {
       default:
         return null;
     }
-  }, [activeTab, theme, toggleTheme, t, i18n, isHideModelInfo, handleToggleModelInfo, isUpdatingModelInfo, configuredModelsCount, setShowModelConfigModal, setShowArchivedChatsModal, isArchivingAll, setShowArchiveAllConfirm, setShowDeleteAllConfirm, isDeletingAll]);
+  }, [activeTab, theme, toggleTheme, t, i18n, isHideModelInfo, handleToggleModelInfo, isUpdatingModelInfo, setShowModelPreferencesModal, setShowArchivedChatsModal, isArchivingAll, setShowArchiveAllConfirm, setShowDeleteAllConfirm, isDeletingAll]);
 
   return (
     <>
@@ -425,10 +413,10 @@ export const SettingsModal: FC<SettingsModalProps> = ({ isOpen, onClose }) => {
         </div>
       </Modal>
 
-      {/* Model Configuration Modal */}
-      <ModelConfigModal
-        isOpen={showModelConfigModal}
-        onClose={() => setShowModelConfigModal(false)}
+      {/* Model Preferences Modal */}
+      <ModelPreferencesModal
+        isOpen={showModelPreferencesModal}
+        onClose={() => setShowModelPreferencesModal(false)}
       />
 
       {/* Archived Chats Modal */}

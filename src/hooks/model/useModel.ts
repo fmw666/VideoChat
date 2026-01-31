@@ -38,11 +38,13 @@ export const useModel = () => {
     initialize,
     filterModels,
     getEnabledAndTestedModels,
+    getVisibleModels,
     generateCategoriesFromModels,
     calculateStatusCounts,
     toggleModelEnabled,
     updateModelTestStatus,
-    updateModelConfigJson
+    updateModelConfigJson,
+    loadVisibilitySettings,
   } = useModelStore();
 
   // --- Side Effects ---
@@ -52,6 +54,13 @@ export const useModel = () => {
       initialize();
     }
   }, [authIsInitialized, isInitialized, initialize]);
+
+  // 用户登录时加载可见性设置
+  useEffect(() => {
+    if (user && isInitialized) {
+      loadVisibilitySettings();
+    }
+  }, [user, isInitialized, loadVisibilitySettings]);
 
   // --- Return Values ---
   return {
@@ -75,10 +84,12 @@ export const useModel = () => {
     // Utilities
     initialize,
     getEnabledAndTestedModels,
+    getVisibleModels,
     generateCategoriesFromModels,
     calculateStatusCounts,
     toggleModelEnabled,
     updateModelTestStatus,
-    updateModelConfigJson
+    updateModelConfigJson,
+    loadVisibilitySettings,
   };
 };

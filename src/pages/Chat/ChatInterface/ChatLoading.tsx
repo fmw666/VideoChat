@@ -35,12 +35,12 @@ export const ChatLoading: FC = () => {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center bg-white/50 backdrop-blur-sm dark:bg-gray-900">
       <div className="relative h-16 w-16">
-        <div className="absolute inset-0 animate-pulse rounded-full border-4 border-indigo-100 dark:border-indigo-200" />
-        <div className="absolute inset-0 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent" />
+        <div className="absolute inset-0 animate-pulse rounded-full border-4 border-zinc-200 dark:border-zinc-700" />
+        <div className="absolute inset-0 animate-spin rounded-full border-4 border-zinc-600 border-t-transparent dark:border-zinc-400" />
         <div className="absolute inset-0 flex items-center justify-center">
-          <SparklesIcon 
-            className="h-6 w-6 animate-bounce transform-gpu text-indigo-600 dark:text-indigo-400" 
-            style={{ animation: `bounce ${ANIMATION_DURATION} infinite` }} 
+          <SparklesIcon
+            className="h-6 w-6 animate-bounce transform-gpu text-zinc-600 dark:text-zinc-400"
+            style={{ animation: `bounce ${ANIMATION_DURATION} infinite` }}
           />
         </div>
       </div>

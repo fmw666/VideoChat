@@ -10,4 +10,13 @@
 // =================================================================================================
 
 export { chatService } from './chatService';
-export type { Chat, Message, Results, VideoResult, Model, MessageVideoConfig, MessageUploadedImage, ModelSpecificParams } from './chatService';
+export type {
+  Chat,
+  Message,
+  Results,
+  VideoResult,
+  Model,
+  MessageVideoConfig,
+  MessageUploadedImage,
+  ModelSpecificParams,
+} from './chatService';

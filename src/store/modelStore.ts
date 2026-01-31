@@ -15,6 +15,8 @@ import { create } from 'zustand';
 // --- Internal Libraries ---
 // --- Services ---
 import { modelManager, type ImageModel } from '@/services/model/modelManager';
+import { modelConfigService } from '@/services/model/modelService';
+import { supabase } from '@/services/api/supabase';
 
 // =================================================================================================
 // Local Type Definitions (不再依赖数据库)
@@ -64,6 +66,9 @@ export interface ModelState {
   isLoading: boolean;
   isInitialized: boolean;
 
+  // --- Visibility State ---
+  modelVisibility: Map<string, boolean>;
+
   // --- State Setters ---
   setModelConfigs: (configs: ModelConfig[] | ((prev: ModelConfig[]) => ModelConfig[])) => void;
   setAvailableModels: (models: AvailableModel[]) => void;
@@ -76,6 +81,7 @@ export interface ModelState {
   initialize: () => Promise<void>;
   filterModels: () => void;
   getEnabledAndTestedModels: () => AvailableModel[];
+  getVisibleModels: () => AvailableModel[];
   generateCategoriesFromModels: (models: AvailableModel[]) => Array<{ id: string; name: string; count: number }>;
   calculateStatusCounts: (configs: ModelConfig[]) => Record<string, number>;
   updateModelConfig: (modelId: string, updatedConfig: ModelConfig) => void;
@@ -83,6 +89,12 @@ export interface ModelState {
   toggleModelEnabled: (modelId: string, enabled: boolean) => Promise<void>;
   updateModelTestStatus: (modelId: string, testStatus: TestStatus) => void;
   updateModelConfigJson: (modelId: string, updatedConfigJson: ModelConfigJson) => void;
+
+  // --- Visibility Operations ---
+  loadVisibilitySettings: () => Promise<void>;
+  toggleModelVisibility: (modelId: string) => Promise<void>;
+  setModelVisibility: (modelId: string, visible: boolean) => Promise<void>;
+  resetAllVisibility: () => Promise<void>;
 }
 
 // =================================================================================================
@@ -112,6 +124,7 @@ export const useModelStore = create<ModelState>((set, get) => ({
   selectedStatus: DEFAULT_SELECTED_STATUS,
   isLoading: DEFAULT_IS_LOADING,
   isInitialized: DEFAULT_IS_INITIALIZED,
+  modelVisibility: new Map(),
 
   // --- State Setters ---
   setModelConfigs: (configs) => {
@@ -260,6 +273,23 @@ export const useModelStore = create<ModelState>((set, get) => ({
   },
 
   /**
+   * 获取可见的模型（基于用户的可见性设置）
+   */
+  getVisibleModels: (): AvailableModel[] => {
+    const allModels = modelManager.getAllModels();
+    const visibility = get().modelVisibility;
+
+    // 过滤出可见的模型
+    return allModels
+      .filter(model => visibility.get(model.id) !== false)
+      .map(model => ({
+        ...model,
+        isEnabled: true,
+        testStatus: TestStatus.TESTED_PASSED
+      }));
+  },
+
+  /**
    * Generate categories from available models
    */
   generateCategoriesFromModels: (models: AvailableModel[]) => {
@@ -354,5 +384,96 @@ export const useModelStore = create<ModelState>((set, get) => ({
     }
 
     set({ availableModels: filteredModels });
+  },
+
+  // --------------------------------------------------------------------------------
+  // Visibility Operations
+  // --------------------------------------------------------------------------------
+
+  /**
+   * 加载用户的可见性设置
+   */
+  loadVisibilitySettings: async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        // 未登录时所有模型默认可见
+        const allModels = modelManager.getAllModels();
+        const defaultVisibility = new Map<string, boolean>();
+        allModels.forEach(model => {
+          defaultVisibility.set(model.id, true);
+        });
+        set({ modelVisibility: defaultVisibility });
+        return;
+      }
+
+      const visibility = await modelConfigService.getVisibilitySettings(user.id);
+
+      // 对于没有设置的模型，默认可见
+      const allModels = modelManager.getAllModels();
+      allModels.forEach(model => {
+        if (!visibility.has(model.id)) {
+          visibility.set(model.id, true);
+        }
+      });
+
+      set({ modelVisibility: visibility });
+    } catch (error) {
+      console.error('Error loading visibility settings:', error);
+    }
+  },
+
+  /**
+   * 切换模型可见性
+   */
+  toggleModelVisibility: async (modelId: string) => {
+    const current = get().modelVisibility.get(modelId) ?? true;
+    await get().setModelVisibility(modelId, !current);
+  },
+
+  /**
+   * 设置模型可见性
+   */
+  setModelVisibility: async (modelId: string, visible: boolean) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const success = await modelConfigService.updateModelVisibility(user.id, modelId, visible);
+      if (success) {
+        const newMap = new Map(get().modelVisibility);
+        newMap.set(modelId, visible);
+        set({ modelVisibility: newMap });
+      }
+    } catch (error) {
+      console.error('Error setting model visibility:', error);
+    }
+  },
+
+  /**
+   * 重置所有模型为可见
+   */
+  resetAllVisibility: async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const allModels = modelManager.getAllModels();
+      const updates = allModels.map(model => ({
+        modelId: model.id,
+        visible: true
+      }));
+
+      const success = await modelConfigService.updateMultipleVisibility(user.id, updates);
+      if (success) {
+        const newMap = new Map<string, boolean>();
+        allModels.forEach(model => {
+          newMap.set(model.id, true);
+        });
+        set({ modelVisibility: newMap });
+      }
+    } catch (error) {
+      console.error('Error resetting all visibility:', error);
+    }
   },
 }));

@@ -18,7 +18,12 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 // --- Third-party Libraries ---
-import { TrashIcon, EllipsisHorizontalIcon, PencilIcon, ArchiveBoxIcon } from '@heroicons/react/24/outline';
+import {
+  TrashIcon,
+  EllipsisHorizontalIcon,
+  PencilIcon,
+  ArchiveBoxIcon,
+} from '@heroicons/react/24/outline';
 import { format, isToday, isYesterday, isThisYear } from 'date-fns';
 import { zhCN, enUS } from 'date-fns/locale';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -57,12 +62,12 @@ const ANIMATION_VARIANTS = {
   container: {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -20 }
+    exit: { opacity: 0, y: -20 },
   },
   item: {
     hover: { scale: 1.01 },
-    tap: { scale: 0.99 }
-  }
+    tap: { scale: 0.99 },
+  },
 };
 
 // =================================================================================================
@@ -87,14 +92,16 @@ const isWithinLastDays = (date: Date, days: number): boolean => {
  * @param date - The date to check
  * @returns boolean - True if within last 7 days
  */
-const isWithinLast7Days = (date: Date): boolean => isWithinLastDays(date, DAYS_IN_WEEK);
+const isWithinLast7Days = (date: Date): boolean =>
+  isWithinLastDays(date, DAYS_IN_WEEK);
 
 /**
  * Checks if a date is within the last 30 days
  * @param date - The date to check
  * @returns boolean - True if within last 30 days
  */
-const isWithinLast30Days = (date: Date): boolean => isWithinLastDays(date, DAYS_IN_MONTH);
+const isWithinLast30Days = (date: Date): boolean =>
+  isWithinLastDays(date, DAYS_IN_MONTH);
 
 // =================================================================================================
 // Component
@@ -117,7 +124,7 @@ export const ChatHistory: FC<ChatHistoryProps> = () => {
     switchChatById,
     deleteChat,
     archiveChat,
-    renameChat
+    renameChat,
   } = useChat();
   const { openMenu } = useContextMenu();
 
@@ -175,14 +182,17 @@ export const ChatHistory: FC<ChatHistoryProps> = () => {
     });
   }, [groupedChats, t]);
 
-  const handleChatClick = useCallback((chatId: string) => {
-    switchChatById(chatId);
-    navigate(`/chat/${chatId}`);
-  }, [switchChatById, navigate]);
+  const handleChatClick = useCallback(
+    (chatId: string) => {
+      switchChatById(chatId);
+      navigate(`/chat/${chatId}`);
+    },
+    [switchChatById, navigate]
+  );
 
   const handleConfirmDelete = useCallback(async () => {
     if (!chatToDelete) return;
-    
+
     setIsDeleting(chatToDelete);
     try {
       await deleteChat(chatToDelete);
@@ -202,86 +212,106 @@ export const ChatHistory: FC<ChatHistoryProps> = () => {
     setChatToDelete(null);
   }, []);
 
-  const handleRename = useCallback((chatId: string) => {
-    const chat = chats.find(c => c.id === chatId);
-    if (chat) {
-      setChatToRename(chat);
-    }
-  }, [chats]);
+  const handleRename = useCallback(
+    (chatId: string) => {
+      const chat = chats.find(c => c.id === chatId);
+      if (chat) {
+        setChatToRename(chat);
+      }
+    },
+    [chats]
+  );
 
-  const handleRenameConfirm = useCallback(async (newTitle: string) => {
-    if (!chatToRename) return;
-    
-    try {
-      await renameChat(chatToRename.id, newTitle);
-    } catch (error) {
-      console.error('Error renaming chat:', error);
-      throw error;
-    }
-  }, [chatToRename, renameChat]);
+  const handleRenameConfirm = useCallback(
+    async (newTitle: string) => {
+      if (!chatToRename) return;
+
+      try {
+        await renameChat(chatToRename.id, newTitle);
+      } catch (error) {
+        console.error('Error renaming chat:', error);
+        throw error;
+      }
+    },
+    [chatToRename, renameChat]
+  );
 
   const handleRenameClose = useCallback(() => {
     setChatToRename(null);
   }, []);
 
-  const handleArchive = useCallback(async (chatId: string) => {
-    setIsArchiving(chatId);
-    try {
-      await archiveChat(chatId);
-      // chatStore 会自动处理聊天列表更新和切换
-      // 如果当前聊天被归档，需要导航到新聊天
-      if (currentChat?.id === chatId) {
-        switchChatById(null);
+  const handleArchive = useCallback(
+    async (chatId: string) => {
+      setIsArchiving(chatId);
+      try {
+        await archiveChat(chatId);
+        // chatStore 会自动处理聊天列表更新和切换
+        // 如果当前聊天被归档，需要导航到新聊天
+        if (currentChat?.id === chatId) {
+          switchChatById(null);
+        }
+      } catch (error) {
+        console.error('Error archiving chat:', error);
+      } finally {
+        setIsArchiving(null);
       }
-    } catch (error) {
-      console.error('Error archiving chat:', error);
-    } finally {
-      setIsArchiving(null);
-    }
-  }, [archiveChat, currentChat, switchChatById]);
+    },
+    [archiveChat, currentChat, switchChatById]
+  );
 
   const handleDelete = useCallback((chatId: string) => {
     setChatToDelete(chatId);
   }, []);
 
-  const handleMenuClick = useCallback((e: React.MouseEvent, chat: Chat) => {
-    e.stopPropagation();
-    
-    const rect = e.currentTarget.getBoundingClientRect();
-    const position = {
-      x: rect.right,
-      y: rect.bottom
-    };
+  const handleMenuClick = useCallback(
+    (e: React.MouseEvent, chat: Chat) => {
+      e.stopPropagation();
 
-    const menuItems = [
-      {
-        id: 'rename',
-        label: t('history.actions.rename'),
-        icon: PencilIcon,
-        onClick: () => handleRename(chat.id),
-        disabled: false
-      },
-      {
-        id: 'archive',
-        label: t('history.actions.archive'),
-        icon: ArchiveBoxIcon,
-        onClick: () => handleArchive(chat.id),
-        disabled: isArchiving === chat.id,
-        loading: isArchiving === chat.id
-      },
-      {
-        id: 'delete',
-        label: t('history.actions.delete'),
-        icon: TrashIcon,
-        onClick: () => handleDelete(chat.id),
-        disabled: isDeleting === chat.id,
-        loading: isDeleting === chat.id,
-        danger: true
-      }
-    ];
+      const rect = e.currentTarget.getBoundingClientRect();
+      const position = {
+        x: rect.right,
+        y: rect.bottom,
+      };
 
-    openMenu(menuItems, position, 'top-left');
-  }, [t, isArchiving, isDeleting, handleRename, handleArchive, handleDelete, openMenu]);
+      const menuItems = [
+        {
+          id: 'rename',
+          label: t('history.actions.rename'),
+          icon: PencilIcon,
+          onClick: () => handleRename(chat.id),
+          disabled: false,
+        },
+        {
+          id: 'archive',
+          label: t('history.actions.archive'),
+          icon: ArchiveBoxIcon,
+          onClick: () => handleArchive(chat.id),
+          disabled: isArchiving === chat.id,
+          loading: isArchiving === chat.id,
+        },
+        {
+          id: 'delete',
+          label: t('history.actions.delete'),
+          icon: TrashIcon,
+          onClick: () => handleDelete(chat.id),
+          disabled: isDeleting === chat.id,
+          loading: isDeleting === chat.id,
+          danger: true,
+        },
+      ];
+
+      openMenu(menuItems, position, 'top-left');
+    },
+    [
+      t,
+      isArchiving,
+      isDeleting,
+      handleRename,
+      handleArchive,
+      handleDelete,
+      openMenu,
+    ]
+  );
 
   // --- Side Effects ---
   // No side effects needed for this component
@@ -290,7 +320,7 @@ export const ChatHistory: FC<ChatHistoryProps> = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-600"></div>
       </div>
     );
   }
@@ -300,7 +330,7 @@ export const ChatHistory: FC<ChatHistoryProps> = () => {
       {/* Chat history list - using new scrollbar styles, adding bottom padding to avoid user menu overlap */}
       <div className="h-[calc(100%-80px)] overflow-y-auto pl-4 pr-2">
         <AnimatePresence>
-          {sortedGroupKeys.map((groupKey) => (
+          {sortedGroupKeys.map(groupKey => (
             <motion.div
               key={groupKey}
               variants={ANIMATION_VARIANTS.container}
@@ -313,9 +343,10 @@ export const ChatHistory: FC<ChatHistoryProps> = () => {
                 {groupKey}
               </h3>
               <div className="space-y-1">
-                {groupedChats[groupKey].map((chat) => {
-                  const isItemLoading = isDeleting === chat.id || isArchiving === chat.id;
-                  
+                {groupedChats[groupKey].map(chat => {
+                  const isItemLoading =
+                    isDeleting === chat.id || isArchiving === chat.id;
+
                   return (
                     <motion.div
                       key={chat.id}
@@ -324,12 +355,12 @@ export const ChatHistory: FC<ChatHistoryProps> = () => {
                         isItemLoading
                           ? 'opacity-60 cursor-not-allowed bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700'
                           : currentChat?.id === chat.id
-                            ? 'bg-indigo-50 text-indigo-600 shadow-sm dark:bg-indigo-900 dark:text-indigo-400'
+                            ? 'bg-zinc-100 text-zinc-700 shadow-sm dark:bg-zinc-800 dark:text-zinc-300'
                             : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
                       }`}
                       variants={ANIMATION_VARIANTS.item}
-                      whileHover={isItemLoading ? {} : "hover"}
-                      whileTap={isItemLoading ? {} : "tap"}
+                      whileHover={isItemLoading ? {} : 'hover'}
+                      whileTap={isItemLoading ? {} : 'tap'}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
@@ -340,34 +371,47 @@ export const ChatHistory: FC<ChatHistoryProps> = () => {
                             {isItemLoading ? (
                               <span className="flex items-center gap-1">
                                 <motion.div
-                                  className="w-3 h-3 border-2 border-indigo-500 border-t-transparent rounded-full"
+                                  className="w-3 h-3 border-2 border-zinc-500 border-t-transparent rounded-full"
                                   animate={{ rotate: 360 }}
-                                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                  transition={{
+                                    duration: 1,
+                                    repeat: Infinity,
+                                    ease: 'linear',
+                                  }}
                                 />
-                                {isDeleting === chat.id ? t('history.deleting') : t('history.archiving')}
+                                {isDeleting === chat.id
+                                  ? t('history.deleting')
+                                  : t('history.archiving')}
                               </span>
                             ) : (
-                              chat.messages[0]?.content || t('history.noMessages')
+                              chat.messages[0]?.content ||
+                              t('history.noMessages')
                             )}
                           </div>
                         </div>
                         <div className="relative ml-2">
                           <button
-                            onClick={(e) => !isItemLoading && handleMenuClick(e, chat)}
+                            onClick={e =>
+                              !isItemLoading && handleMenuClick(e, chat)
+                            }
                             disabled={isItemLoading}
                             className={`p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200 cursor-pointer rounded-lg disabled:cursor-not-allowed disabled:opacity-50 ${
                               isItemLoading
                                 ? 'cursor-not-allowed'
-                                : currentChat?.id === chat.id 
-                                  ? 'group-hover:bg-white/50 dark:group-hover:bg-gray-900/50' 
+                                : currentChat?.id === chat.id
+                                  ? 'group-hover:bg-white/50 dark:group-hover:bg-gray-900/50'
                                   : 'group-hover:bg-gray-100 dark:group-hover:bg-gray-800'
                             }`}
                           >
                             {isItemLoading ? (
                               <motion.div
-                                className="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full"
+                                className="w-4 h-4 border-2 border-zinc-500 border-t-transparent rounded-full"
                                 animate={{ rotate: 360 }}
-                                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                transition={{
+                                  duration: 1,
+                                  repeat: Infinity,
+                                  ease: 'linear',
+                                }}
                               />
                             ) : (
                               <EllipsisHorizontalIcon className="w-4 h-4" />

@@ -42,6 +42,12 @@ export interface AssetsState {
   isLoading: boolean;
   isInitialized: boolean;
 
+  // --- Pagination State ---
+  currentPage: number;
+  hasMore: boolean;
+  isLoadingMore: boolean;
+  totalCount: number;
+
   // --- State Setters ---
   setAssets: (assets: Asset[] | ((prev: Asset[]) => Asset[])) => void;
   setFilteredAssets: (assets: Asset[]) => void;
@@ -56,6 +62,8 @@ export interface AssetsState {
   // --- Operations ---
   initialize: () => Promise<void>;
   refreshAssets: () => Promise<void>;
+  loadMoreAssets: () => Promise<void>;
+  resetPagination: () => void;
   filterAssets: () => void;
   convertAssetToDisplayAsset: (asset: Asset) => DisplayAsset[];
   generateTagsFromAssets: (assets: Asset[]) => Array<{ id: string; name: string; count: number }>;
@@ -78,6 +86,11 @@ const DEFAULT_IS_LOADING = false;
 const DEFAULT_SELECTED_CATEGORY = 'all';
 const DEFAULT_SELECTED_TAGS: string[] = [];
 const DEFAULT_TITLE_LENGTH = 20;
+const DEFAULT_PAGE_SIZE = 30;
+const DEFAULT_CURRENT_PAGE = 1;
+const DEFAULT_HAS_MORE = true;
+const DEFAULT_IS_LOADING_MORE = false;
+const DEFAULT_TOTAL_COUNT = 0;
 
 // =================================================================================================
 // Store Configuration
@@ -98,6 +111,10 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
   isFlatMode: DEFAULT_IS_FLAT_MODE,
   isInitialized: DEFAULT_IS_INITIALIZED,
   isLoading: DEFAULT_IS_LOADING,
+  currentPage: DEFAULT_CURRENT_PAGE,
+  hasMore: DEFAULT_HAS_MORE,
+  isLoadingMore: DEFAULT_IS_LOADING_MORE,
+  totalCount: DEFAULT_TOTAL_COUNT,
 
   // --- State Setters ---
   setAssets: (assets) => {
@@ -177,7 +194,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
    */
   initialize: async () => {
     const { isInitialized } = get();
-    
+
     if (isInitialized || get().isLoading) {
       return;
     }
@@ -188,12 +205,15 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
         isLoading: true
       }));
 
-      const result = await assetsService.getAssetsList(1, 9999);
+      const result = await assetsService.getAssetsList(1, DEFAULT_PAGE_SIZE);
       const assets = result.data;
 
       set(state => ({
         ...state,
         assets,
+        currentPage: 1,
+        totalCount: result.count,
+        hasMore: result.count > assets.length,
         isLoading: false,
         isInitialized: true
       }));
@@ -221,12 +241,15 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
         isLoading: true
       }));
 
-      const result = await assetsService.getAssetsList(1, 1000);
+      const result = await assetsService.getAssetsList(1, DEFAULT_PAGE_SIZE);
       const assets = result.data;
 
       set(state => ({
         ...state,
         assets,
+        currentPage: 1,
+        totalCount: result.count,
+        hasMore: result.count > assets.length,
         isLoading: false
       }));
 
@@ -239,6 +262,50 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
         isLoading: false
       }));
     }
+  },
+
+  /**
+   * Load more assets (infinite scroll)
+   */
+  loadMoreAssets: async () => {
+    const { isLoadingMore, hasMore, currentPage, assets } = get();
+
+    if (isLoadingMore || !hasMore) {
+      return;
+    }
+
+    try {
+      set({ isLoadingMore: true });
+
+      const nextPage = currentPage + 1;
+      const result = await assetsService.getAssetsList(nextPage, DEFAULT_PAGE_SIZE);
+      const newAssets = result.data;
+
+      set(state => ({
+        ...state,
+        assets: [...assets, ...newAssets],
+        currentPage: nextPage,
+        hasMore: assets.length + newAssets.length < result.count,
+        isLoadingMore: false
+      }));
+
+      // Re-apply filtering to include new assets
+      get().filterAssets();
+    } catch (error) {
+      console.error('[AssetsStore] Error loading more assets:', error);
+      set({ isLoadingMore: false });
+    }
+  },
+
+  /**
+   * Reset pagination state
+   */
+  resetPagination: () => {
+    set({
+      currentPage: DEFAULT_CURRENT_PAGE,
+      hasMore: DEFAULT_HAS_MORE,
+      isLoadingMore: DEFAULT_IS_LOADING_MORE
+    });
   },
 
   /**

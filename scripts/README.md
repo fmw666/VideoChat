@@ -1,6 +1,6 @@
-# DesignChat Initialization Scripts
+# VideoChat Initialization Scripts
 
-This directory contains scripts for initializing the DesignChat application's Supabase backend.
+This directory contains scripts for initializing the VideoChat application's Supabase backend.
 
 ## Available Scripts
 
@@ -32,7 +32,7 @@ VITE_SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 VITE_SUPABASE_POSTGRES_URL=postgresql://postgres.your-project-ref:your-password@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres
 
 # Storage bucket name
-VITE_SUPABASE_STORAGE_BUCKET_NAME=designchat
+VITE_SUPABASE_STORAGE_BUCKET_NAME=videochat
 ```
 
 ### 2. Install Dependencies

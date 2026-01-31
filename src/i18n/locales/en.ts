@@ -22,13 +22,15 @@ export const en = {
     processing: 'Processing',
     enabled: 'Enabled',
     disabled: 'Disabled',
+    all: 'All',
+    done: 'Done',
   },
   notFound: {
-    title: "Oh no, the page is lost!",
+    title: 'Oh no, the page is lost!',
     subtitle: "Don't worry, the little ghost is helping you find the way...",
-    countdown: "{{count}} seconds until you return to the homepage...",
-    redirecting: "Redirecting...",
-    goHome: "Go Home Now",
+    countdown: '{{count}} seconds until you return to the homepage...',
+    redirecting: 'Redirecting...',
+    goHome: 'Go Home Now',
   },
   chat: {
     placeholder: 'Type your prompt... (Ctrl + Enter for new line)',
@@ -56,19 +58,20 @@ export const en = {
       referenceMode: 'Reference Image Mode',
       uploadImage: 'Upload Image',
       videoSettings: 'Video Settings',
-    i2vUpload: 'Image to Video',
-    i2vMode: 'Image to Video Mode',
-    firstLastFrame: 'First/Last Frame',
-    firstFrame: 'First',
-    lastFrame: 'Last',
-    lastFrameDisabled: {
-      klingResolution: 'Kling 2.1 first/last frame requires 1080P',
-      gvMultiImage: 'GV model does not support first/last frame with multiple images',
-    },
-    firstFrameHint: '1st as first frame, rest as reference',
-    lastFrameHint: 'Last frame: skipped if unsupported',
-    lastFrameNotSupported: 'not supported',
-    maxImages: 'Max {{count}} images',
+      i2vUpload: 'Image to Video',
+      i2vMode: 'Image to Video Mode',
+      firstLastFrame: 'First/Last Frame',
+      firstFrame: 'First',
+      lastFrame: 'Last',
+      lastFrameDisabled: {
+        klingResolution: 'Kling 2.1 first/last frame requires 1080P',
+        gvMultiImage:
+          'GV model does not support first/last frame with multiple images',
+      },
+      firstFrameHint: '1st as first frame, rest as reference',
+      lastFrameHint: 'Last frame: skipped if unsupported',
+      lastFrameNotSupported: 'not supported',
+      maxImages: 'Max {{count}} images',
     },
     title: {
       edit: 'Edit title',
@@ -87,11 +90,14 @@ export const en = {
       success: '✅ Images generated successfully!',
       partialSuccess: '🚫 Some generations failed!',
       failed: '❌ All generations failed!',
-      timeout: '⚠️ Task timeout! The task has been running for more than 15 minutes or the task status has been lost.',
-      leaveWarning: 'Video is being generated. Refreshing the page will lose the generation progress. Are you sure you want to leave?',
+      timeout:
+        '⚠️ Task timeout! The task has been running for more than 15 minutes or the task status has been lost.',
+      leaveWarning:
+        'Video is being generated. Refreshing the page will lose the generation progress. Are you sure you want to leave?',
       videoGenerating: '⏳ Generating video...',
       videoSuccess: '✅ Video generated successfully!',
-      videoTimeoutHint: 'Video generation usually takes 1-10 minutes, please be patient',
+      videoTimeoutHint:
+        'Video generation usually takes 1-10 minutes, please be patient',
     },
     video: {
       preview: 'Video Preview',
@@ -100,25 +106,27 @@ export const en = {
       clickToExpand: 'Click to expand',
     },
     archived: {
-      description: 'This conversation has been archived. To continue, please unarchive it first.',
+      description:
+        'This conversation has been archived. To continue, please unarchive it first.',
       unarchive: 'Unarchive',
       unarchiving: 'Unarchiving...',
       unarchiveSuccess: 'Chat unarchived successfully!',
     },
     guide: {
       title: 'Start a New Design Conversation',
-      subtitle: 'Let\'s begin a creative journey and explore infinite possibilities',
+      subtitle:
+        "Let's begin a creative journey and explore infinite possibilities",
       tips: {
         title: 'Usage Tips',
         examples: [
           'A cute panda playing in a bamboo forest, watercolor style',
           'A cherry blossom forest, watercolor style, soft pink and white',
-          'A landscape painting, traditional Chinese style, with misty clouds'
+          'A landscape painting, traditional Chinese style, with misty clouds',
         ],
         clickToCopy: 'Click to copy',
         copied: 'Copied to clipboard!',
-        copyFailed: 'Failed to copy text'
-      }
+        copyFailed: 'Failed to copy text',
+      },
     },
     response: {
       text: 'Text Response',
@@ -152,13 +160,19 @@ export const en = {
     i2vOnly: 'I2V Only',
     multiImage: 'Multi-Image',
     lastFrame: 'First/Last Frame',
-    onlyT2VHint: 'This model only supports text-to-video, image input is not supported',
-    onlyI2VHint: 'This model only supports image-to-video, please upload an image first',
-    tooManyImagesHint: 'This model supports max {{max}} images, but {{current}} were uploaded',
+    onlyT2VHint:
+      'This model only supports text-to-video, image input is not supported',
+    onlyI2VHint:
+      'This model only supports image-to-video, please upload an image first',
+    tooManyImagesHint:
+      'This model supports max {{max}} images, but {{current}} were uploaded',
     incompatible: {
-      onlyT2V: 'This model only supports text-to-video, uploaded images will be ignored',
-      onlyI2V: 'This model only supports image-to-video, please upload an image first',
-      tooManyImages: 'This model supports max {{max}} images, but {{current}} were uploaded',
+      onlyT2V:
+        'This model only supports text-to-video, uploaded images will be ignored',
+      onlyI2V:
+        'This model only supports image-to-video, please upload an image first',
+      tooManyImages:
+        'This model supports max {{max}} images, but {{current}} were uploaded',
       unknown: 'Model is incompatible with current input',
       shortOnlyT2V: 'No image input supported',
       shortOnlyI2V: 'Image required',
@@ -175,7 +189,8 @@ export const en = {
     noMessages: 'No messages',
     item: 'item',
     deleteTitle: 'Delete Chat',
-    deleteMessage: 'Are you sure you want to delete this chat? This action cannot be undone.',
+    deleteMessage:
+      'Are you sure you want to delete this chat? This action cannot be undone.',
     delete: 'Delete',
     deleteSuccess: 'Chat deleted successfully',
     deleteError: 'Failed to delete chat',
@@ -226,7 +241,7 @@ export const en = {
     notLogin: 'Not Login',
     signIn: {
       title: 'Welcome',
-      subtitle: 'Welcome to AI Drawing Platform',
+      subtitle: 'Welcome to AI Video Generation Platform',
       description: 'Sign in with invite code + email verification',
       inviteCode: {
         label: 'Invite Code',
@@ -264,8 +279,8 @@ export const en = {
       errors: {
         inviteRequired: 'Please verify invite code first',
         emailRequired: 'Please enter email and verification code',
-      }
-    }
+      },
+    },
   },
   settings: {
     title: 'Settings',
@@ -300,6 +315,21 @@ export const en = {
       configureButton: 'Configure',
       modalTitle: 'Model Configuration',
     },
+    modelPreferences: {
+      title: 'Model Preferences',
+      subtitle:
+        'Choose which models to show in the model selection list. Hidden models will not appear when selecting models.',
+      description: 'Customize displayed models in the selection list',
+      configure: 'Configure',
+      visibleCount: '{{count}} of {{total}} models visible',
+      showSuccess: 'Model is now visible',
+      hideSuccess: 'Model is now hidden',
+      updateError: 'Failed to update model visibility',
+      resetAll: 'Reset all to visible',
+      resetSuccess: 'All models reset to visible',
+      resetError: 'Failed to reset model visibility',
+      noModels: 'No models found in this category',
+    },
     models: {
       comingSoon: 'Model configuration coming soon...',
       configUpdated: 'Model configuration updated',
@@ -308,7 +338,8 @@ export const en = {
       testConnectionFailed: 'Connection test failed',
       testConnectionError: 'Connection test error',
       configurationTitle: 'Model Configuration Management',
-      configurationDescription: 'Configure and manage your AI models, set API keys and system prompts',
+      configurationDescription:
+        'Configure and manage your AI models, set API keys and system prompts',
       configurationDetails: 'Configuration Details',
       enabled: 'Enabled',
       disabled: 'Disabled',
@@ -324,7 +355,8 @@ export const en = {
         apiKey: 'API Key',
         apiSecret: 'API Secret',
         systemPrompt: 'System Prompt',
-        systemPromptHint: 'Add {{prompt}} to specify user input position, if not present it will be automatically added at the end',
+        systemPromptHint:
+          'Add {{prompt}} to specify user input position, if not present it will be automatically added at the end',
         apiKeyPlaceholder: 'Enter API key',
         apiSecretPlaceholder: 'Enter API secret',
         systemPromptPlaceholder: 'Enter system prompt (optional)',
@@ -385,7 +417,8 @@ export const en = {
       unarchiveSuccess: 'Chat unarchived successfully',
       unarchiveError: 'Failed to unarchive chat',
       archiveAllTitle: 'Archive All Chats',
-      archiveAllMessage: 'Are you sure you want to archive all your current chats? This action will move all chats to the archived section.',
+      archiveAllMessage:
+        'Are you sure you want to archive all your current chats? This action will move all chats to the archived section.',
       archiveAllSuccess: 'All chats archived successfully',
       archiveAllError: 'Failed to archive all chats',
       archiveAllLoading: 'Archiving all chats...',
@@ -393,26 +426,30 @@ export const en = {
       deleteAllChatsDescription: 'Delete all your unarchived chats',
       deleteAll: 'Delete All',
       deleteAllTitle: 'Delete All Chats',
-      deleteAllMessage: 'Are you sure you want to delete all your current chats? This action cannot be undone and will permanently remove all current chats and their associated assets. Note: This will not delete archived chats.',
+      deleteAllMessage:
+        'Are you sure you want to delete all your current chats? This action cannot be undone and will permanently remove all current chats and their associated assets. Note: This will not delete archived chats.',
       deleteAllSuccess: 'All current chats deleted successfully',
       deleteAllError: 'Failed to delete all chats',
       deleteAllLoading: 'Deleting all chats...',
       unarchiveAll: 'Unarchive All',
       unarchiveAllTitle: 'Unarchive All Chats',
-      unarchiveAllMessage: 'Are you sure you want to unarchive all your archived chats? This will move all archived chats back to your main chat list.',
+      unarchiveAllMessage:
+        'Are you sure you want to unarchive all your archived chats? This will move all archived chats back to your main chat list.',
       unarchiveAllSuccess: 'All chats unarchived successfully',
       unarchiveAllError: 'Failed to unarchive all chats',
       unarchiveAllLoading: 'Unarchiving all chats...',
       deleteAllArchived: 'Delete All Archived',
       deleteAllArchivedTitle: 'Delete All Archived Chats',
-      deleteAllArchivedMessage: 'Are you sure you want to delete all your archived chats? This action cannot be undone and will permanently remove all archived conversations and their associated assets.',
+      deleteAllArchivedMessage:
+        'Are you sure you want to delete all your archived chats? This action cannot be undone and will permanently remove all archived conversations and their associated assets.',
       deleteAllArchivedSuccess: 'All archived chats deleted successfully',
       deleteAllArchivedError: 'Failed to delete all archived chats',
       deleteAllArchivedLoading: 'Deleting all archived chats...',
       deleteSuccess: 'Archived chat deleted successfully',
       deleteError: 'Failed to delete archived chat',
       deleteArchivedTitle: 'Delete Archived Chat',
-      deleteArchivedMessage: 'Are you sure you want to permanently delete this archived chat? This action cannot be undone.',
+      deleteArchivedMessage:
+        'Are you sure you want to permanently delete this archived chat? This action cannot be undone.',
       loadError: 'Failed to load archived chats',
     },
   },
@@ -456,7 +493,7 @@ export const en = {
     title: 'Assets',
     backToChat: 'Back to Chat',
     todo: 'Asset library is coming soon...',
-    description: 'Your AI image gallery',
+    description: 'Your AI video gallery',
     category: {
       all: 'All',
       text2img: 'Text to Image',
@@ -505,7 +542,55 @@ export const en = {
     modelSpecificSettings: 'Model-Specific Settings',
     exclusive: 'Exclusive',
     sceneType: 'Scene Type',
-    sceneTypeHint: 'Select motion control for more precise character motion generation',
+    sceneTypeHint:
+      'Select motion control for more precise character motion generation',
+  },
+  menu: {
+    requestLogs: 'Request Logs',
+  },
+  requestLogs: {
+    title: 'Request Logs',
+    subtitle: 'View your API request history',
+    filter: {
+      all: 'All',
+      success: 'Success',
+      failed: 'Failed',
+      pending: 'Processing',
+    },
+    status: {
+      pending: 'Pending',
+      processing: 'Processing',
+      success: 'Success',
+      failed: 'Failed',
+    },
+    type: {
+      video: 'Video',
+      text2img: 'Text to Image',
+      img2img: 'Image to Image',
+      chat: 'Chat',
+      other: 'Other',
+    },
+    empty: 'No request logs found',
+    loadMore: 'Load More',
+    loading: 'Loading...',
+    loadError: 'Failed to load',
+    detail: {
+      prompt: 'Prompt',
+      params: 'Request Params',
+      response: 'Response Data',
+      error: 'Error Message',
+      duration: 'Duration',
+      model: 'Model',
+      requestId: 'Request ID',
+      createdAt: 'Created At',
+      viewChat: 'View Chat',
+      noData: 'No data',
+    },
+    stats: {
+      total: 'Total',
+      success: 'Success',
+      failed: 'Failed',
+    },
   },
   imagePreview: {
     colorPalette: 'Color Palette',

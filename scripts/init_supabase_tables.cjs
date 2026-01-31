@@ -25,6 +25,7 @@ const path = require('path');
 const create_chat_msgs_sql = fs.readFileSync(path.join(__dirname, '../docs/supabase/db/chat_msgs_table.sql'), 'utf8');
 const create_assets_sql = fs.readFileSync(path.join(__dirname, '../docs/supabase/db/assets_table.sql'), 'utf8');
 const create_video_tasks_sql = fs.readFileSync(path.join(__dirname, '../docs/supabase/db/video_tasks_table.sql'), 'utf8');
+const create_model_configs_sql = fs.readFileSync(path.join(__dirname, '../docs/supabase/db/model_configs_table.sql'), 'utf8');
 
 // ? -> Please refer to `docs/supabase/db/README.md` for how to get the connection string
 const client = new Client({
@@ -62,6 +63,12 @@ async function main() {
     const res_video_tasks = await client.query(create_video_tasks_sql);
     console.log('[INFO] Video tasks table result:', res_video_tasks.rows);
     console.log('[INFO] Video tasks table created successfully.');
+
+    // Create/Update model_configs table (for model preferences)
+    console.log('[INFO] Creating/Updating model_configs table...');
+    const res_model_configs = await client.query(create_model_configs_sql);
+    console.log('[INFO] Model configs table result:', res_model_configs.rows);
+    console.log('[INFO] Model configs table created/updated successfully.');
   } catch (error) {
     console.error('[ERROR] Error creating tables:', error);
     process.exit(1);

@@ -1,161 +1,252 @@
-<div align="center"><img src="./images/top_image.png" alt="License" width="800px" /></div>
+# VideoChat
 
-<br />
+<div align="center">
 
-<p align="center">
-  <a href="./README.md"><img alt="README in English" src="https://img.shields.io/badge/English-d9d9d9?style=for-the-badge&color=0078D4"></a>
-  <a href="./README_CN.md"><img alt="简体中文版自述文件" src="https://img.shields.io/badge/简体中文-d9d9d9?style=for-the-badge&color=1AAD19"></a>
-</p>
+一个现代化的多模型 AI 视频生成平台
 
-`DesignChat AI` is a powerful AI image generation platform that supports multiple models and custom prompts, empowering efficient creation.
+[![React](https://img.shields.io/badge/React-18.2-61DAFB?logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.2-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-BaaS-3ECF8E?logo=supabase)](https://supabase.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-| Node.js | NPM |
-| :-----  | :-- |
-| v22.14.0 | v11.2.0 |
+</div>
 
-## ✨ Features
+---
 
-- 🎨 Multi-model AI image generation
-- 🔄 Real-time generation preview
-- 📱 Mobile-first responsive design
-- 🔒 User authentication and authorization
-- 💾 History saving
-- 🗃️ Remote image storage
+## 简介
 
-## 🛠️ Tech Stack
+VideoChat 是一个功能完善的 AI 视频生成平台，支持多种主流视频生成模型，提供简洁直观的对话式交互界面。无论是文生视频还是图生视频，都能轻松完成。
 
-| Technology | Version | Description |
-|------|------|------|
-| ![React](https://img.shields.io/badge/React-18.2.0-20232a?logo=react&logoColor=61DAFB&labelColor=20232a) | 18.2.0 | UI library |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-3178C6?logo=typescript&logoColor=white&labelColor=3178C6) | 5.2.2 | Type-safe JavaScript extension |
-| ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.1-0ea5e9?logo=tailwindcss&logoColor=white&labelColor=0ea5e9) | 3.4.1 | Utility-first CSS framework |
-| ![Vite](https://img.shields.io/badge/Vite-6.3.5-646CFF?logo=vite&logoColor=FFD62E&labelColor=646CFF) | 6.3.5 | Next-gen frontend build tool |
-| ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=3ECF8E&labelColor=222) | - | Open-source Firebase alternative |
-| ![Vercel](https://img.shields.io/badge/Vercel-Deploy-222222?logo=vercel&logoColor=white&labelColor=111111) | - | Frontend deployment platform |
+### 核心特性
 
-## 🚀 Quick Start
+- **多模型支持** - 集成 20+ 主流视频生成模型（海螺、可灵、Vidu、即梦、Seedance 等）
+- **对话式交互** - 简洁的聊天界面，自然流畅的创作体验
+- **双向生成** - 支持文生视频（T2V）和图生视频（I2V）
+- **高级控制** - 首尾帧控制、多图输入、负面提示词等
+- **素材管理** - 内置素材库，方便浏览和管理生成的视频
+- **云端存储** - 基于 Supabase 的可靠数据存储
+- **国际化** - 支持中文和英文界面
 
-💡 This project uses `supabase` for the backend. You need to create a `supabase` project and configure environment variables.
+---
 
-### 🖥️ Local Development
+## 技术栈
 
-#### 1. Clone the repository
+| 类别 | 技术 |
+|------|------|
+| 前端框架 | React 18 + TypeScript |
+| 构建工具 | Vite 6 |
+| 状态管理 | Zustand |
+| 样式方案 | Tailwind CSS |
+| 动画库 | Framer Motion |
+| 后端服务 | Supabase (PostgreSQL + Auth + Storage) |
+| 国际化 | i18next |
+| 路由 | React Router v6 |
+
+---
+
+## 支持的模型
+
+### 海螺 (Hailuo)
+- Hailuo-02、Hailuo-2.3、Hailuo-2.3-fast
+
+### 可灵 (Kling)
+- Kling-1.6、Kling-2.0、Kling-2.1、Kling-o1、Kling-2.5、Kling-2.6
+
+### Vidu
+- Vidu-q2、Vidu-q2-turbo、Vidu-q2-pro
+
+### 即梦 (Jimeng)
+- Jimeng-3.0pro
+
+### Seedance
+- Seedance-1.0-pro、Seedance-1.0-lite-i2v、Seedance-1.0-pro-fast、Seedance-1.5-pro
+
+### 其他
+- GV-3.1、GV-3.1-fast、OS-2.0
+
+---
+
+## 快速开始
+
+### 环境要求
+
+- Node.js >= 18
+- npm 或 pnpm
+- Supabase 账号
+
+### 安装步骤
+
+1. **克隆项目**
 
 ```bash
-git clone https://github.com/fmw666/DesignChat.git
-cd DesignChat
+git clone https://github.com/your-username/VideoChat.git
+cd VideoChat
 ```
 
-#### 2. Install dependencies
+2. **安装依赖**
 
 ```bash
 npm install
 ```
 
-#### 3. Initialize Supabase project
+3. **配置环境变量**
 
-- Log in to [Supabase](https://supabase.com/) and create a project.
-- Refer to the following docs to obtain various keys:
-  - **Database (db) key:** [See db key doc](./docs/supabase/db/README.md)
-  - **Auth key:** [See auth key doc](./docs/supabase/auth/README.md)
-  - **Storage key:** [See storage key doc](./docs/supabase/storage/README.md)
-- It is recommended to use the script to initialize all Supabase tables, auth, storage, etc. in one click.
-  - Run locally:
-    ```bash
-    npm install && npm run init
-    ```
-  - Run with Docker (no local Node required):
-    ```bash
-    docker run --rm -v %cd%:/app -w /app node:20 npm run init
-    ```
-- For script details and more usage, see [Init Script Guide](./scripts/README.md)
-
-#### 4. Configure environment variables
-
-> Obtain the required keys from your Supabase project
+复制 `.env.example` 为 `.env` 并填写配置：
 
 ```bash
 cp .env.example .env
-# Edit the .env file and fill in the required environment variables
 ```
 
-#### 5. Start the development server
+主要配置项：
+
+```env
+# 邀请码（用于用户注册）
+VITE_AUTH_INVITE_CODE=your_invite_code
+
+# Supabase 配置
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# 腾讯云 VOD AIGC（视频生成服务）
+VITE_VOD_SECRET_ID=your_vod_secret_id
+VITE_VOD_SECRET_KEY=your_vod_secret_key
+VITE_VOD_SUB_APP_ID=your_sub_app_id
+```
+
+4. **初始化数据库**
+
+```bash
+npm run init:all
+```
+
+5. **启动开发服务器**
 
 ```bash
 npm run dev
 ```
 
-#### 6. Jest test
+访问 http://localhost:3000 即可使用。
 
-```bash
-npm run test
+---
+
+## 项目结构
+
+```
+VideoChat/
+├── public/                 # 静态资源
+├── scripts/                # 初始化脚本
+├── src/
+│   ├── components/         # React 组件
+│   │   ├── features/       # 功能组件
+│   │   │   ├── assets/     # 素材库组件
+│   │   │   ├── auth/       # 认证组件
+│   │   │   ├── chat/       # 聊天组件
+│   │   │   └── user/       # 用户组件
+│   │   └── shared/         # 共享组件
+│   ├── config/             # 配置文件
+│   ├── hooks/              # React Hooks
+│   ├── i18n/               # 国际化
+│   ├── pages/              # 页面组件
+│   ├── providers/          # Context Providers
+│   ├── services/           # 业务服务层
+│   ├── store/              # Zustand 状态管理
+│   ├── styles/             # 样式文件
+│   ├── types/              # TypeScript 类型
+│   └── utils/              # 工具函数
+├── .env.example            # 环境变量示例
+├── tailwind.config.js      # Tailwind 配置
+└── vite.config.ts          # Vite 配置
 ```
 
-#### 7. Lint test
+---
 
-```bash
-npm run lint
-```
+## 可用脚本
 
-### ☁️ One-Click Deploy
-
-| Method | Scenario & Description |
+| 命令 | 说明 |
 |------|------|
-| [![Deploy with Vercel by clone](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ffmw666%2FDesignChat) | Clone this repo directly to your `Vercel` account, suitable for first-time deployment or full project copy |
-| [![Deploy with Vercel by import](https://vercel.com/button)](https://vercel.com/new/import?s=https%3A%2F%2Fgithub.com%2Ffmw666%2FDesignChat&teamSlug=maovos-projects) | Import this repo into your `Vercel` project, suitable for existing Vercel projects or team collaboration |
+| `npm run dev` | 启动开发服务器 |
+| `npm run build` | 构建生产版本 |
+| `npm run preview` | 预览生产构建 |
+| `npm run lint` | 代码检查 |
+| `npm run format` | 代码格式化 |
+| `npm run init` | 初始化 Supabase |
+| `npm run init:all` | 完整初始化（表 + 存储 + 认证） |
 
-Click the button above and follow these steps to deploy:
+---
 
-1. Log in or register a `Vercel` account
-2. Import the GitHub repository
-3. Configure environment variables
-4. Click deploy
+## 部署
 
-## 📝 TODO
+### Vercel 部署
 
-> Items that are done but not yet removed are marked with ✅.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/VideoChat)
 
-### 🧩 Feature Design
+### 手动部署
 
-1. User agreement and privacy: Add user agreement and privacy content to the login dialog
-1. Model config info: Complete model info documentation
-1. Model config support: Support more model APIs
-1. Image-to-image: Optimize image-to-image experience, support model config
-1. Asset library refactor: Optimize asset library loading and interaction
-1. Image API management: Error code and message i18n management
-1. Model config linkage: Real-time effect on modelStore when config changes
-1. System prompt: Add system prompt feature for models
-1. Model testing: Support model testing feature
-1. Doubao API management: Separate ark/apiKey management for 3.0 and base models
-1. API proxy protocol: Use vite proxy in dev, direct API in prod
+1. 构建项目：`npm run build`
+2. 将 `dist` 目录部署到任意静态托管服务
 
-### ⚡ Performance Optimization
+---
 
-1. Merge API requests: Use Supabase Edge Functions to merge DB requests
-1. Bundle splitting: Fine-grained chunking with rollupOptions
-1. Image optimization: Thumbnails, lazy loading, progressive loading, preloading
-1. Code cleanup: Remove redundant code, optimize structure
-1. IndexedDB: Optimize query performance using the browser IndexedDB
+## 配置说明
 
-### 🎬 Animation & Theme
+### Supabase 配置
 
-1. Animation performance optimization
-1. Theme management: Global dark theme config, reduce style duplication
+项目使用 Supabase 作为后端服务，需要配置以下表：
 
-### 🎈 Lint
+- `chat_msgs` - 聊天消息存储
+- `assets` - 素材资源存储
+- `model_configs` - 模型配置存储
+- `video_tasks` - 视频任务存储
 
-1. Handle `npm run lint` errors and warnings
+运行 `npm run init:all` 可自动创建所有必要的表和存储桶。
 
-## 🤝 Contributing
+### 视频生成服务
 
-For those who want to contribute, please refer to our [Contribution Guide](./CONTRIBUTING.md).
+项目通过腾讯云 VOD AIGC API 进行视频生成，需要配置相应的密钥。
 
-**Contributors**
+---
 
-<a href="https://github.com/fmw666/DesignChat/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=fmw666/DesignChat" />
-</a>
+## 功能说明
 
-## 📄 License
+### 文生视频 (T2V)
 
-MIT License - see [LICENSE](LICENSE) for details
+输入文字描述，AI 自动生成对应的视频内容。
+
+### 图生视频 (I2V)
+
+上传一张或多张图片作为参考，生成基于图片的视频动画。
+
+### 首尾帧控制
+
+部分模型支持首尾帧控制，可以指定视频的起始和结束画面。
+
+### 素材库
+
+自动保存所有生成的视频，支持收藏、分类浏览等功能。
+
+---
+
+## 贡献指南
+
+欢迎提交 Issue 和 Pull Request。
+
+1. Fork 本项目
+2. 创建特性分支：`git checkout -b feature/amazing-feature`
+3. 提交更改：`git commit -m 'Add amazing feature'`
+4. 推送分支：`git push origin feature/amazing-feature`
+5. 提交 Pull Request
+
+---
+
+## 许可证
+
+本项目采用 MIT 许可证 - 详情请参阅 [LICENSE](LICENSE) 文件。
+
+---
+
+<div align="center">
+
+**VideoChat** - 让视频创作更简单
+
+</div>

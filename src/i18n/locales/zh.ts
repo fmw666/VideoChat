@@ -22,6 +22,8 @@ export const zh = {
     processing: '处理中',
     enabled: '开启',
     disabled: '关闭',
+    all: '全部',
+    done: '完成',
   },
   notFound: {
     title: '哦豁，页面迷路啦！',
@@ -56,19 +58,19 @@ export const zh = {
       referenceMode: '参考图模式',
       uploadImage: '上传图片',
       videoSettings: '视频设置',
-    i2vUpload: '图生视频',
-    i2vMode: '图生视频模式',
-    firstLastFrame: '首尾帧',
-    firstFrame: '首帧',
-    lastFrame: '尾帧',
-    lastFrameDisabled: {
-      klingResolution: '可灵 2.1 首尾帧仅支持 1080P 分辨率',
-      gvMultiImage: 'GV 模型使用多图时不支持首尾帧',
-    },
-    firstFrameHint: '第一张为首帧，其余为参考图',
-    lastFrameHint: '尾帧：若模型不支持则不上传',
-    lastFrameNotSupported: '不支持',
-    maxImages: '最多 {{count}} 张',
+      i2vUpload: '图生视频',
+      i2vMode: '图生视频模式',
+      firstLastFrame: '首尾帧',
+      firstFrame: '首帧',
+      lastFrame: '尾帧',
+      lastFrameDisabled: {
+        klingResolution: '可灵 2.1 首尾帧仅支持 1080P 分辨率',
+        gvMultiImage: 'GV 模型使用多图时不支持首尾帧',
+      },
+      firstFrameHint: '第一张为首帧，其余为参考图',
+      lastFrameHint: '尾帧：若模型不支持则不上传',
+      lastFrameNotSupported: '不支持',
+      maxImages: '最多 {{count}} 张',
     },
     title: {
       edit: '编辑标题',
@@ -113,12 +115,12 @@ export const zh = {
         examples: [
           '一只可爱的熊猫在竹林中玩耍，水彩风格',
           '一片樱花林，水彩风格，柔和的粉色和白色',
-          '一幅山水画，国画风格，云雾缭绕'
+          '一幅山水画，国画风格，云雾缭绕',
         ],
         clickToCopy: '点击复制',
         copied: '已复制到剪贴板！',
-        copyFailed: '复制失败'
-      }
+        copyFailed: '复制失败',
+      },
     },
     response: {
       text: '文本回复',
@@ -154,7 +156,8 @@ export const zh = {
     lastFrame: '首尾帧',
     onlyT2VHint: '该模型仅支持文生视频，不支持图片输入',
     onlyI2VHint: '该模型仅支持图生视频，请先上传图片',
-    tooManyImagesHint: '该模型最多支持 {{max}} 张图片，当前已上传 {{current}} 张',
+    tooManyImagesHint:
+      '该模型最多支持 {{max}} 张图片，当前已上传 {{current}} 张',
     incompatible: {
       onlyT2V: '该模型仅支持文生视频，已上传的图片将被忽略',
       onlyI2V: '该模型仅支持图生视频，请先上传图片后再使用此模型',
@@ -226,7 +229,7 @@ export const zh = {
     notLogin: '未登录',
     signIn: {
       title: '欢迎登录',
-      subtitle: '欢迎使用 AI 绘图平台',
+      subtitle: '欢迎使用 AI 视频生成平台',
       description: '邀请码+邮箱验证码 登录',
       inviteCode: {
         label: '邀请码',
@@ -264,8 +267,8 @@ export const zh = {
       errors: {
         inviteRequired: '请先验证邀请码',
         emailRequired: '请输入邮箱和验证码',
-      }
-    }
+      },
+    },
   },
   settings: {
     title: '设置',
@@ -300,6 +303,21 @@ export const zh = {
       configureButton: '前往配置',
       modalTitle: '模型配置',
     },
+    modelPreferences: {
+      title: '模型偏好',
+      subtitle:
+        '选择在模型选择列表中显示哪些模型。隐藏的模型在选择模型时不会出现。',
+      description: '自定义模型选择列表中显示的模型',
+      configure: '配置',
+      visibleCount: '{{total}} 个模型中 {{count}} 个可见',
+      showSuccess: '模型已设置为可见',
+      hideSuccess: '模型已隐藏',
+      updateError: '更新模型可见性失败',
+      resetAll: '重置全部为可见',
+      resetSuccess: '所有模型已重置为可见',
+      resetError: '重置模型可见性失败',
+      noModels: '该分类下没有找到模型',
+    },
     models: {
       comingSoon: '模型配置功能即将推出...',
       configUpdated: '模型配置已更新',
@@ -324,7 +342,8 @@ export const zh = {
         apiKey: 'API Key',
         apiSecret: 'API Secret',
         systemPrompt: '系统提示词',
-        systemPromptHint: '添加 {{prompt}} 指定用户输入位置，若没有则自动添加在最后',
+        systemPromptHint:
+          '添加 {{prompt}} 指定用户输入位置，若没有则自动添加在最后',
         apiKeyPlaceholder: '请输入API Key',
         apiSecretPlaceholder: '请输入API Secret',
         systemPromptPlaceholder: '请输入系统提示词（可选）',
@@ -385,7 +404,8 @@ export const zh = {
       unarchiveSuccess: '聊天已成功取消归档',
       unarchiveError: '取消归档聊天失败',
       archiveAllTitle: '归档所有聊天',
-      archiveAllMessage: '确定要归档您当前的所有聊天吗？此操作会将所有聊天移动到归档区域。',
+      archiveAllMessage:
+        '确定要归档您当前的所有聊天吗？此操作会将所有聊天移动到归档区域。',
       archiveAllSuccess: '所有聊天已成功归档',
       archiveAllError: '归档所有聊天失败',
       archiveAllLoading: '正在归档所有聊天...',
@@ -393,24 +413,28 @@ export const zh = {
       deleteAllChatsDescription: '永久删除您当前未归档的所有对话',
       deleteAll: '全部删除',
       deleteAllTitle: '删除所有聊天',
-      deleteAllMessage: '确定要删除您当前的所有聊天吗？此操作无法撤销，将永久删除所有当前对话及其相关资源。注意：此操作不会删除已归档的聊天。',
+      deleteAllMessage:
+        '确定要删除您当前的所有聊天吗？此操作无法撤销，将永久删除所有当前对话及其相关资源。注意：此操作不会删除已归档的聊天。',
       deleteAllSuccess: '所有当前聊天已成功删除',
       deleteAllError: '删除所有聊天失败',
       deleteAllLoading: '正在删除所有聊天...',
       deleteSuccess: '已归档聊天删除成功',
       deleteError: '删除已归档聊天失败',
       deleteArchivedTitle: '删除已归档聊天',
-      deleteArchivedMessage: '确定要永久删除这个已归档的聊天吗？此操作无法撤销。',
+      deleteArchivedMessage:
+        '确定要永久删除这个已归档的聊天吗？此操作无法撤销。',
       loadError: '加载已归档聊天失败',
       unarchiveAll: '全部取消归档',
       unarchiveAllTitle: '取消归档所有聊天',
-      unarchiveAllMessage: '确定要取消归档您所有已归档的聊天吗？这将把所有已归档的聊天移回您的主聊天列表。',
+      unarchiveAllMessage:
+        '确定要取消归档您所有已归档的聊天吗？这将把所有已归档的聊天移回您的主聊天列表。',
       unarchiveAllSuccess: '所有聊天已成功取消归档',
       unarchiveAllError: '取消归档所有聊天失败',
       unarchiveAllLoading: '正在取消归档所有聊天...',
       deleteAllArchived: '删除所有已归档',
       deleteAllArchivedTitle: '删除所有已归档聊天',
-      deleteAllArchivedMessage: '确定要删除您所有已归档的聊天吗？此操作无法撤销，将永久删除所有已归档对话及其相关资源。',
+      deleteAllArchivedMessage:
+        '确定要删除您所有已归档的聊天吗？此操作无法撤销，将永久删除所有已归档对话及其相关资源。',
       deleteAllArchivedSuccess: '所有已归档聊天已成功删除',
       deleteAllArchivedError: '删除所有已归档聊天失败',
       deleteAllArchivedLoading: '正在删除所有已归档聊天...',
@@ -456,7 +480,7 @@ export const zh = {
     title: '素材库',
     backToChat: '返回聊天',
     todo: '素材库功能即将推出...',
-    description: '您的AI绘图作品广场',
+    description: '您的 AI 视频作品广场',
     category: {
       all: '全部',
       text2img: '文生图',
@@ -506,6 +530,53 @@ export const zh = {
     exclusive: '专属',
     sceneType: '场景类型',
     sceneTypeHint: '选择动作控制可实现更精准的人物动作生成',
+  },
+  menu: {
+    requestLogs: '请求日志',
+  },
+  requestLogs: {
+    title: '请求日志',
+    subtitle: '查看您的 API 请求记录',
+    filter: {
+      all: '全部',
+      success: '成功',
+      failed: '失败',
+      pending: '处理中',
+    },
+    status: {
+      pending: '等待中',
+      processing: '处理中',
+      success: '成功',
+      failed: '失败',
+    },
+    type: {
+      video: '视频生成',
+      text2img: '文生图',
+      img2img: '图生图',
+      chat: '对话',
+      other: '其他',
+    },
+    empty: '暂无请求记录',
+    loadMore: '加载更多',
+    loading: '加载中...',
+    loadError: '加载失败',
+    detail: {
+      prompt: '提示词',
+      params: '请求参数',
+      response: '响应数据',
+      error: '错误信息',
+      duration: '耗时',
+      model: '模型',
+      requestId: '请求 ID',
+      createdAt: '创建时间',
+      viewChat: '查看会话',
+      noData: '无数据',
+    },
+    stats: {
+      total: '总请求',
+      success: '成功',
+      failed: '失败',
+    },
   },
   imagePreview: {
     colorPalette: '配色方案',

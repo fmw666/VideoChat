@@ -1,6 +1,6 @@
 /**
  * @file init.cjs
- * @description Main initialization script for DesignChat Supabase setup
+ * @description Main initialization script for VideoChat Supabase setup
  * @author fmw666@github
  * @version 1.0.0
  * @date 2025-07-01
@@ -34,7 +34,9 @@ try {
   dotenv.config();
   console.log('[INFO] Loaded environment variables from .env file');
 } catch (error) {
-  console.log('[INFO] dotenv not available, using system environment variables');
+  console.log(
+    '[INFO] dotenv not available, using system environment variables'
+  );
 }
 
 // Available initialization scripts
@@ -42,18 +44,23 @@ const INIT_SCRIPTS = {
   tables: {
     file: 'init_supabase_tables.cjs',
     description: 'Initialize Supabase database tables',
-    dependencies: ['VITE_SUPABASE_POSTGRES_URL']
+    dependencies: ['VITE_SUPABASE_POSTGRES_URL'],
   },
   storage: {
     file: 'init_supabase_storage.cjs',
     description: 'Initialize Supabase storage buckets',
-    dependencies: ['VITE_SUPABASE_URL', 'VITE_SUPABASE_SERVICE_ROLE_KEY', 'VITE_SUPABASE_STORAGE_BUCKET_NAME', 'VITE_SUPABASE_POSTGRES_URL'],
+    dependencies: [
+      'VITE_SUPABASE_URL',
+      'VITE_SUPABASE_SERVICE_ROLE_KEY',
+      'VITE_SUPABASE_STORAGE_BUCKET_NAME',
+      'VITE_SUPABASE_POSTGRES_URL',
+    ],
   },
   auth: {
     file: 'init_supabase_auth.cjs',
     description: 'Initialize Supabase auth email templates',
     dependencies: ['VITE_SUPABASE_ACCESS_TOKEN', 'VITE_SUPABASE_PROJECT_REF'],
-  }
+  },
 };
 
 /**
@@ -61,15 +68,15 @@ const INIT_SCRIPTS = {
  */
 function showHelp() {
   console.log(`
-DesignChat Supabase Initialization Script
+VideoChat Supabase Initialization Script
 
 Usage:
   node scripts/init.cjs [script] [options]
 
 Available Scripts:
-${Object.entries(INIT_SCRIPTS).map(([name, config]) => 
-  `  ${name.padEnd(10)} - ${config.description}`
-).join('\n')}
+${Object.entries(INIT_SCRIPTS)
+  .map(([name, config]) => `  ${name.padEnd(10)} - ${config.description}`)
+  .join('\n')}
 
 Options:
   --help, -h     Show this help message
@@ -101,13 +108,17 @@ Note: You can also use a .env file in the project root to set these variables.
  */
 function checkEnvironmentVariables(requiredVars) {
   const missing = requiredVars.filter(varName => !process.env[varName]);
-  
+
   if (missing.length > 0) {
-    console.error(`[ERROR] Missing required environment variables: ${missing.join(', ')}`);
-    console.error('[ERROR] Please set these variables or add them to your .env file');
+    console.error(
+      `[ERROR] Missing required environment variables: ${missing.join(', ')}`
+    );
+    console.error(
+      '[ERROR] Please set these variables or add them to your .env file'
+    );
     return false;
   }
-  
+
   return true;
 }
 
@@ -118,38 +129,45 @@ function checkEnvironmentVariables(requiredVars) {
  * @returns {Promise<boolean>} - True if script executed successfully
  */
 function executeScript(scriptName, scriptFile) {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     console.log(`\n[INFO] ========================================`);
     console.log(`[INFO] Executing ${scriptName} initialization...`);
     console.log(`[INFO] ========================================`);
-    
+
     const scriptPath = path.join(__dirname, scriptFile);
-    
+
     // Check if script file exists
     if (!fs.existsSync(scriptPath)) {
       console.error(`[ERROR] Script file not found: ${scriptPath}`);
       resolve(false);
       return;
     }
-    
+
     const child = spawn('node', [scriptPath], {
       stdio: 'inherit',
       env: process.env,
-      cwd: process.cwd()
+      cwd: process.cwd(),
     });
-    
-    child.on('close', (code) => {
+
+    child.on('close', code => {
       if (code === 0) {
-        console.log(`[INFO] ✅ ${scriptName} initialization completed successfully`);
+        console.log(
+          `[INFO] ✅ ${scriptName} initialization completed successfully`
+        );
         resolve(true);
       } else {
-        console.error(`[ERROR] ❌ ${scriptName} initialization failed with code ${code}`);
+        console.error(
+          `[ERROR] ❌ ${scriptName} initialization failed with code ${code}`
+        );
         resolve(false);
       }
     });
-    
-    child.on('error', (error) => {
-      console.error(`[ERROR] Failed to execute ${scriptName} script:`, error.message);
+
+    child.on('error', error => {
+      console.error(
+        `[ERROR] Failed to execute ${scriptName} script:`,
+        error.message
+      );
       resolve(false);
     });
   });
@@ -160,16 +178,16 @@ function executeScript(scriptName, scriptFile) {
  */
 async function main() {
   const args = process.argv.slice(2);
-  
+
   // Handle help command
   if (args.includes('--help') || args.includes('-h')) {
     showHelp();
     return;
   }
-  
+
   // Determine which scripts to run
   let scriptsToRun = [];
-  
+
   if (args.includes('--all') || args.includes('-a') || args.length === 0) {
     // Run all scripts
     scriptsToRun = Object.keys(INIT_SCRIPTS);
@@ -177,7 +195,7 @@ async function main() {
     // Run specific scripts
     const requestedScripts = args.filter(arg => !arg.startsWith('-'));
     scriptsToRun = requestedScripts.filter(script => INIT_SCRIPTS[script]);
-    
+
     if (scriptsToRun.length === 0) {
       console.error('[ERROR] No valid scripts specified. Available scripts:');
       Object.keys(INIT_SCRIPTS).forEach(script => {
@@ -187,10 +205,10 @@ async function main() {
       process.exit(1);
     }
   }
-  
+
   console.log('[INFO] DesignChat Supabase Initialization');
   console.log(`[INFO] Scripts to run: ${scriptsToRun.join(', ')}`);
-  
+
   // Check environment variables for all scripts to be run
   const allRequiredVars = new Set();
   scriptsToRun.forEach(scriptName => {
@@ -198,11 +216,11 @@ async function main() {
       allRequiredVars.add(varName);
     });
   });
-  
+
   if (!checkEnvironmentVariables(Array.from(allRequiredVars))) {
     process.exit(1);
   }
-  
+
   // Execute scripts
   const results = [];
   for (const scriptName of scriptsToRun) {
@@ -210,24 +228,26 @@ async function main() {
     const success = await executeScript(scriptName, config.file);
     results.push({ script: scriptName, success });
   }
-  
+
   // Summary
   console.log('\n[INFO] ========================================');
   console.log('[INFO] Initialization Summary');
   console.log('[INFO] ========================================');
-  
+
   const successful = results.filter(r => r.success).length;
   const failed = results.filter(r => !r.success).length;
-  
+
   results.forEach(result => {
     const status = result.success ? '✅ SUCCESS' : '❌ FAILED';
     console.log(`[INFO] ${result.script.padEnd(10)} - ${status}`);
   });
-  
+
   console.log(`\n[INFO] Total: ${successful} successful, ${failed} failed`);
-  
+
   if (failed > 0) {
-    console.log('[WARN] Some initializations failed. Please check the logs above.');
+    console.log(
+      '[WARN] Some initializations failed. Please check the logs above.'
+    );
     process.exit(1);
   } else {
     console.log('[INFO] 🎉 All initializations completed successfully!');

@@ -34,6 +34,10 @@ export const useAssets = () => {
     isDetailMode,
     isLoading,
     isInitialized,
+    currentPage,
+    hasMore,
+    isLoadingMore,
+    totalCount,
     setAssets,
     setFilteredAssets,
     setFilteredFlatAssets,
@@ -44,6 +48,8 @@ export const useAssets = () => {
     setIsInitialized,
     initialize,
     refreshAssets,
+    loadMoreAssets,
+    resetPagination,
     filterAssets,
     convertAssetToDisplayAsset,
     generateTagsFromAssets,
@@ -78,7 +84,11 @@ export const useAssets = () => {
     isDetailMode,
     isLoading,
     isInitialized,
-    
+    currentPage,
+    hasMore,
+    isLoadingMore,
+    totalCount,
+
     // Setters - 总是返回函数，即使没有用户登录
     setAssets,
     setFilteredAssets,
@@ -87,12 +97,14 @@ export const useAssets = () => {
     setSelectedTags,
     setIsFlatMode,
     setIsDetailMode,
-    
+
     // Operations (only available when user is logged in)
     initialize: user ? initialize : async () => {},
     refreshAssets: user ? refreshAssets : async () => {},
+    loadMoreAssets: user ? loadMoreAssets : async () => {},
+    resetPagination: user ? resetPagination : () => {},
     filterAssets: user ? filterAssets : () => {},
-    
+
     // Utilities
     convertAssetToDisplayAsset,
     generateTagsFromAssets,
