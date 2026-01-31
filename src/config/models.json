@@ -1,0 +1,543 @@
+{
+  "configs": {
+    "Hailuo": {
+      "maxConcurrent": 2,
+      "cooldownMs": 1000,
+      "pollIntervalMs": 4000,
+      "pollTimeoutMs": 720000,
+      "maxPollAttempts": 180
+    },
+    "Kling": {
+      "maxConcurrent": 2,
+      "cooldownMs": 1000,
+      "pollIntervalMs": 4000,
+      "pollTimeoutMs": 720000,
+      "maxPollAttempts": 180
+    },
+    "Vidu": {
+      "maxConcurrent": 2,
+      "cooldownMs": 1000,
+      "pollIntervalMs": 4000,
+      "pollTimeoutMs": 720000,
+      "maxPollAttempts": 180
+    },
+    "Jimeng": {
+      "maxConcurrent": 2,
+      "cooldownMs": 1000,
+      "pollIntervalMs": 4000,
+      "pollTimeoutMs": 720000,
+      "maxPollAttempts": 180
+    },
+    "Seedance": {
+      "maxConcurrent": 2,
+      "cooldownMs": 1000,
+      "pollIntervalMs": 4000,
+      "pollTimeoutMs": 720000,
+      "maxPollAttempts": 180
+    },
+    "GV": {
+      "maxConcurrent": 2,
+      "cooldownMs": 1000,
+      "pollIntervalMs": 4000,
+      "pollTimeoutMs": 720000,
+      "maxPollAttempts": 180
+    },
+    "OS": {
+      "maxConcurrent": 2,
+      "cooldownMs": 1000,
+      "pollIntervalMs": 4000,
+      "pollTimeoutMs": 720000,
+      "maxPollAttempts": 180
+    }
+  },
+  "commonConfig": {
+    "enhancePrompt": {
+      "type": "select",
+      "label": "提示词优化",
+      "labelEn": "Enhance Prompt",
+      "options": [
+        { "value": "Enabled", "label": "开启", "labelEn": "Enabled" },
+        { "value": "Disabled", "label": "关闭", "labelEn": "Disabled" }
+      ],
+      "default": "Enabled"
+    },
+    "storageMode": {
+      "type": "select",
+      "label": "存储模式",
+      "labelEn": "Storage Mode",
+      "options": [
+        { "value": "Temporary", "label": "临时存储", "labelEn": "Temporary" },
+        { "value": "Permanent", "label": "永久存储", "labelEn": "Permanent" }
+      ],
+      "default": "Temporary"
+    },
+    "enhanceSwitch": {
+      "type": "select",
+      "label": "画质增强",
+      "labelEn": "Enhance Switch",
+      "options": [
+        { "value": "Enabled", "label": "开启", "labelEn": "Enabled" },
+        { "value": "Disabled", "label": "关闭", "labelEn": "Disabled" }
+      ],
+      "default": "Disabled"
+    },
+    "negativePrompt": {
+      "type": "input",
+      "label": "负面提示词",
+      "labelEn": "Negative Prompt",
+      "placeholder": "输入不想生成的内容...",
+      "placeholderEn": "Enter content you don't want to generate...",
+      "default": ""
+    },
+    "audioGeneration": {
+      "type": "select",
+      "label": "音频生成",
+      "labelEn": "Audio Generation",
+      "options": [
+        { "value": "Enabled", "label": "开启", "labelEn": "Enabled" },
+        { "value": "Disabled", "label": "关闭", "labelEn": "Disabled" }
+      ],
+      "default": "Disabled"
+    },
+    "personGeneration": {
+      "type": "select",
+      "label": "人物生成",
+      "labelEn": "Person Generation",
+      "options": [
+        { "value": "AllowAdult", "label": "允许成人", "labelEn": "Allow Adult" },
+        { "value": "Disabled", "label": "禁用", "labelEn": "Disabled" }
+      ],
+      "default": "AllowAdult"
+    }
+  },
+  "models": [
+    {
+      "id": "Hailuo-02",
+      "name": "海螺 02",
+      "modelName": "Hailuo",
+      "modelVersion": "02",
+      "publishDate": "2024-08-01",
+      "description": "海螺AI基础版视频生成模型，支持高质量视频输出",
+      "category": "海螺",
+      "group": "Hailuo",
+      "supportedResolutions": ["720P", "1080P"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "一只可爱的熊猫在竹林中玩耍，阳光透过竹叶洒落"
+      }
+    },
+    {
+      "id": "Hailuo-2.3",
+      "name": "海螺 2.3",
+      "modelName": "Hailuo",
+      "modelVersion": "2.3",
+      "publishDate": "2024-12-01",
+      "description": "海螺AI 2.3版本，画质更清晰，动作更自然",
+      "category": "海螺",
+      "group": "Hailuo",
+      "supportedResolutions": ["720P", "1080P"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "一只金毛犬在草地上奔跑，背景是蓝天白云"
+      }
+    },
+    {
+      "id": "Hailuo-2.3-fast",
+      "name": "海螺 2.3 快速版",
+      "modelName": "Hailuo",
+      "modelVersion": "2.3-fast",
+      "publishDate": "2024-12-15",
+      "description": "海螺AI 2.3快速版本，仅支持图生视频，生成速度更快",
+      "category": "海螺",
+      "group": "Hailuo",
+      "supportedResolutions": ["720P", "1080P"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": false,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "让图片中的场景动起来"
+      }
+    },
+    {
+      "id": "Kling-1.6",
+      "name": "可灵 1.6",
+      "modelName": "Kling",
+      "modelVersion": "1.6",
+      "publishDate": "2024-10-01",
+      "description": "可灵AI 1.6版本，支持多种风格的视频生成",
+      "category": "可灵",
+      "group": "Kling",
+      "supportedResolutions": ["720P", "1080P"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {
+        "sceneType": {
+          "type": "select",
+          "label": "场景类型",
+          "labelEn": "Scene Type",
+          "options": [
+            { "value": "", "label": "默认", "labelEn": "Default" },
+            { "value": "motion_control", "label": "动作控制", "labelEn": "Motion Control" }
+          ],
+          "default": ""
+        }
+      },
+      "demo": {
+        "prompt": "一位舞者在舞台上优雅地旋转"
+      }
+    },
+    {
+      "id": "Kling-2.0",
+      "name": "可灵 2.0",
+      "modelName": "Kling",
+      "modelVersion": "2.0",
+      "publishDate": "2024-11-15",
+      "description": "可灵AI 2.0版本，全面升级的视频生成能力",
+      "category": "可灵",
+      "group": "Kling",
+      "supportedResolutions": ["720P", "1080P", "2K"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "樱花树下的少女，花瓣随风飘落"
+      }
+    },
+    {
+      "id": "Kling-2.1",
+      "name": "可灵 2.1",
+      "modelName": "Kling",
+      "modelVersion": "2.1",
+      "publishDate": "2025-01-01",
+      "description": "可灵AI 2.1版本，更强的细节表现力，支持首尾帧（1080P）",
+      "category": "可灵",
+      "group": "Kling",
+      "supportedResolutions": ["720P", "1080P", "2K"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": true,
+      "lastFrameResolutions": ["1080P"],
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "宇航员在月球表面行走，地球在背景中升起"
+      }
+    },
+    {
+      "id": "Kling-2.5",
+      "name": "可灵 2.5",
+      "modelName": "Kling",
+      "modelVersion": "2.5",
+      "publishDate": "2025-03-01",
+      "description": "可灵AI 2.5版本，支持更长视频和更复杂场景",
+      "category": "可灵",
+      "group": "Kling",
+      "supportedResolutions": ["720P", "1080P", "2K", "4K"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "海浪拍打礁石，日落时分的海边"
+      }
+    },
+    {
+      "id": "Kling-o1",
+      "name": "可灵 o1",
+      "modelName": "Kling",
+      "modelVersion": "o1",
+      "publishDate": "2025-04-01",
+      "description": "可灵AI o1推理版本，更智能的视频生成，支持动作控制",
+      "category": "可灵",
+      "group": "Kling",
+      "supportedResolutions": ["720P", "1080P", "2K", "4K"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": false,
+      "hasSpecificConfig": true,
+      "modelSpecificConfig": {
+        "sceneType": {
+          "type": "select",
+          "label": "场景类型",
+          "labelEn": "Scene Type",
+          "description": "选择动作控制可实现更精准的动作生成",
+          "descriptionEn": "Select motion control for more precise motion generation",
+          "options": [
+            { "value": "", "label": "默认", "labelEn": "Default" },
+            { "value": "motion_control", "label": "动作控制", "labelEn": "Motion Control" }
+          ],
+          "default": ""
+        }
+      },
+      "demo": {
+        "prompt": "未来城市的空中交通，飞行汽车穿梭其中"
+      }
+    },
+    {
+      "id": "Kling-2.6",
+      "name": "可灵 2.6",
+      "modelName": "Kling",
+      "modelVersion": "2.6",
+      "publishDate": "2025-05-01",
+      "description": "可灵AI 2.6最新版本，业界领先的视频生成质量",
+      "category": "可灵",
+      "group": "Kling",
+      "supportedResolutions": ["720P", "1080P", "2K", "4K"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "瀑布从悬崖倾泻而下，水雾弥漫"
+      }
+    },
+    {
+      "id": "Vidu-q2",
+      "name": "Vidu Q2",
+      "modelName": "Vidu",
+      "modelVersion": "q2",
+      "publishDate": "2024-09-01",
+      "description": "Vidu Q2基础版本，支持1-7张图片多图参考",
+      "category": "Vidu",
+      "group": "Vidu",
+      "supportedResolutions": ["720P", "1080P"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 7,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "一只蝴蝶在花丛中飞舞"
+      }
+    },
+    {
+      "id": "Vidu-q2-turbo",
+      "name": "Vidu Q2 Turbo",
+      "modelName": "Vidu",
+      "modelVersion": "q2-turbo",
+      "publishDate": "2024-11-01",
+      "description": "Vidu Q2 Turbo版本，更快的生成速度，支持首尾帧",
+      "category": "Vidu",
+      "group": "Vidu",
+      "supportedResolutions": ["720P", "1080P"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 7,
+      "supportLastFrame": true,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "咖啡杯中的拿铁艺术，蒸汽缓缓升起"
+      }
+    },
+    {
+      "id": "Vidu-q2-pro",
+      "name": "Vidu Q2 Pro",
+      "modelName": "Vidu",
+      "modelVersion": "q2-pro",
+      "publishDate": "2025-01-15",
+      "description": "Vidu Q2 Pro专业版本，最高质量输出，支持首尾帧",
+      "category": "Vidu",
+      "group": "Vidu",
+      "supportedResolutions": ["720P", "1080P", "2K"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 7,
+      "supportLastFrame": true,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "雪山日出，金色阳光照耀山峰"
+      }
+    },
+    {
+      "id": "Jimeng-3.0pro",
+      "name": "即梦 3.0 Pro",
+      "modelName": "Jimeng",
+      "modelVersion": "3.0pro",
+      "publishDate": "2025-02-01",
+      "description": "即梦AI 3.0 Pro专业版，支持复杂场景的视频生成",
+      "category": "即梦",
+      "group": "Jimeng",
+      "supportedResolutions": ["720P", "1080P", "2K"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "古风少女抚琴，庭院中落英缤纷"
+      }
+    },
+    {
+      "id": "Seedance-1.0-pro",
+      "name": "Seedance 1.0 Pro",
+      "modelName": "Seedance",
+      "modelVersion": "1.0-pro",
+      "publishDate": "2024-12-01",
+      "description": "Seedance 1.0 Pro专业版，擅长人物动作生成",
+      "category": "Seedance",
+      "group": "Seedance",
+      "supportedResolutions": ["720P", "1080P"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "一位武者练习太极拳，动作流畅优美"
+      }
+    },
+    {
+      "id": "Seedance-1.0-lite-i2v",
+      "name": "Seedance 1.0 Lite I2V",
+      "modelName": "Seedance",
+      "modelVersion": "1.0-lite-i2v",
+      "publishDate": "2024-12-15",
+      "description": "Seedance 1.0 Lite版本，仅支持图生视频，适合快速生成",
+      "category": "Seedance",
+      "group": "Seedance",
+      "supportedResolutions": ["720P", "1080P"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": false,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "让图片中的人物动起来"
+      }
+    },
+    {
+      "id": "Seedance-1.0-pro-fast",
+      "name": "Seedance 1.0 Pro Fast",
+      "modelName": "Seedance",
+      "modelVersion": "1.0-pro-fast",
+      "publishDate": "2025-01-01",
+      "description": "Seedance 1.0 Pro快速版，平衡质量与速度",
+      "category": "Seedance",
+      "group": "Seedance",
+      "supportedResolutions": ["720P", "1080P"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "小溪流水，鱼儿在水中游动"
+      }
+    },
+    {
+      "id": "Seedance-1.5-pro",
+      "name": "Seedance 1.5 Pro",
+      "modelName": "Seedance",
+      "modelVersion": "1.5-pro",
+      "publishDate": "2025-03-01",
+      "description": "Seedance 1.5 Pro最新版本，全面升级的视频质量",
+      "category": "Seedance",
+      "group": "Seedance",
+      "supportedResolutions": ["720P", "1080P", "2K"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 1,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "都市夜景，霓虹灯闪烁"
+      }
+    },
+    {
+      "id": "GV-3.1",
+      "name": "GV 3.1",
+      "modelName": "GV",
+      "modelVersion": "3.1",
+      "publishDate": "2025-01-15",
+      "description": "GV 3.1版本，通用视频生成模型，支持多图输入和首尾帧",
+      "category": "GV",
+      "group": "GV",
+      "supportedResolutions": ["720P", "1080P"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 3,
+      "supportLastFrame": true,
+      "lastFrameNote": "使用多图输入时不可使用首尾帧",
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "森林中的小鹿，阳光斑驳"
+      }
+    },
+    {
+      "id": "GV-3.1-fast",
+      "name": "GV 3.1 Fast",
+      "modelName": "GV",
+      "modelVersion": "3.1-fast",
+      "publishDate": "2025-02-01",
+      "description": "GV 3.1快速版本，更短的生成时间，支持首尾帧",
+      "category": "GV",
+      "group": "GV",
+      "supportedResolutions": ["720P", "1080P"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": true,
+      "maxImages": 3,
+      "supportLastFrame": true,
+      "lastFrameNote": "使用多图输入时不可使用首尾帧",
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "风吹麦浪，金色的田野"
+      }
+    },
+    {
+      "id": "OS-2.0",
+      "name": "OS 2.0",
+      "modelName": "OS",
+      "modelVersion": "2.0",
+      "publishDate": "2025-02-15",
+      "description": "OS 2.0版本，开源视频生成模型，仅支持文生视频",
+      "category": "OS",
+      "group": "OS",
+      "supportedResolutions": ["720P", "1080P"],
+      "supportedAspectRatios": ["16:9", "9:16", "1:1"],
+      "supportT2V": true,
+      "supportI2V": false,
+      "maxImages": 0,
+      "supportLastFrame": false,
+      "modelSpecificConfig": {},
+      "demo": {
+        "prompt": "极光在夜空中舞动，星星点点"
+      }
+    }
+  ]
+}
