@@ -24,7 +24,6 @@ import {
   ArrowPathIcon,
   ChevronDownIcon,
   ChevronUpIcon,
-  DocumentTextIcon,
   FilmIcon,
 } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -33,7 +32,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 // --- Components ---
 import { Modal } from '@/components/shared/common/Modal';
 // --- Services ---
-import { videoTaskService, type VideoTask } from '@/services/model/videoTaskService';
+import { type VideoTask } from '@/services/model/videoTaskService';
 import { supabase } from '@/services/api/supabase';
 import type { VideoTaskStatus } from '@/config/models.types';
 

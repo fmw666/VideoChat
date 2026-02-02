@@ -395,6 +395,7 @@ export const useModelStore = create<ModelState>((set, get) => ({
    */
   loadVisibilitySettings: async () => {
     try {
+      if (!supabase) return;
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         // 未登录时所有模型默认可见
@@ -436,6 +437,7 @@ export const useModelStore = create<ModelState>((set, get) => ({
    */
   setModelVisibility: async (modelId: string, visible: boolean) => {
     try {
+      if (!supabase) return;
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -455,6 +457,7 @@ export const useModelStore = create<ModelState>((set, get) => ({
    */
   resetAllVisibility: async () => {
     try {
+      if (!supabase) return;
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 

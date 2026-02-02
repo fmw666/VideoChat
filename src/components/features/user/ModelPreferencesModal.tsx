@@ -60,7 +60,7 @@ export const ModelPreferencesModal: FC<ModelPreferencesModalProps> = ({
 
   // --- Hooks ---
   const { t } = useTranslation();
-  const { modelVisibility, setModelVisibility, loadVisibilitySettings, resetAllVisibility } = useModelStore();
+  const { setModelVisibility, loadVisibilitySettings, resetAllVisibility } = useModelStore();
 
   // --- Side Effects ---
   useEffect(() => {
