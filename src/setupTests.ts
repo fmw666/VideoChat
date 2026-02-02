@@ -16,7 +16,7 @@ declare global {
 }
 
 // 设置全局变量
-global.TextEncoder = TextEncoder;
+global.TextEncoder = TextEncoder as unknown as typeof globalThis.TextEncoder;
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {

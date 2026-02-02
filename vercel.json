@@ -4,9 +4,19 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm install",
+  "functions": {
+    "api/*.ts": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  },
   "rewrites": [
     {
-      "source": "/((?!assets/).*)",
+      "source": "/api/vod",
+      "destination": "/api/vod"
+    },
+    {
+      "source": "/((?!api|assets).*)",
       "destination": "/index.html"
     }
   ],

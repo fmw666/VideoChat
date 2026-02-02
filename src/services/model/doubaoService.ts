@@ -114,13 +114,13 @@ export class DoubaoService {
 
     const cryptoKey = await crypto.subtle.importKey(
       'raw',
-      keyData,
+      keyData as BufferSource,
       { name: 'HMAC', hash: 'SHA-256' },
       false,
       ['sign']
     );
 
-    const signature = await crypto.subtle.sign('HMAC', cryptoKey, contentData);
+    const signature = await crypto.subtle.sign('HMAC', cryptoKey, contentData as BufferSource);
 
     return new Uint8Array(signature);
   }

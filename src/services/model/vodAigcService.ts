@@ -77,7 +77,7 @@ function toHex(bytes: Uint8Array): string {
  */
 async function sha256(message: string): Promise<string> {
   const msgBuffer = utf8Encode(message);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer as BufferSource);
   return toHex(new Uint8Array(hashBuffer));
 }
 
@@ -87,12 +87,12 @@ async function sha256(message: string): Promise<string> {
 async function hmacSha256(key: ArrayBuffer | Uint8Array, message: string): Promise<ArrayBuffer> {
   const cryptoKey = await crypto.subtle.importKey(
     'raw',
-    key,
+    key as BufferSource,
     { name: 'HMAC', hash: 'SHA-256' },
     false,
     ['sign']
   );
-  return await crypto.subtle.sign('HMAC', cryptoKey, utf8Encode(message));
+  return await crypto.subtle.sign('HMAC', cryptoKey, utf8Encode(message) as BufferSource);
 }
 
 /**
@@ -170,7 +170,8 @@ export class VodAigcService {
     this.config = {
       region: 'ap-guangzhou',
       endpointHost: 'vod.ap-guangzhou.tencentcloudapi.com',
-      requestUrl: import.meta.env.DEV ? '/api/vod' : 'https://vod.ap-guangzhou.tencentcloudapi.com',
+      // 开发和生产环境都使用代理路径，避免 CORS 问题
+      requestUrl: '/api/vod',
       ...config,
     };
   }
