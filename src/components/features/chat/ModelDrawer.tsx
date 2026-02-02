@@ -21,6 +21,7 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
   PlusIcon,
+  CheckIcon,
 } from '@heroicons/react/24/outline';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -412,21 +413,21 @@ export const ModelDrawer: FC<ModelDrawerProps> = ({
               const isUnavailable = !availability.available;
 
               return (
-                <Tooltip
-                  key={id}
-                  content={getUnavailableReasonText(
-                    availability.reason,
-                    availability.maxImages
-                  )}
-                  show={isUnavailable}
-                >
-                  <div
-                    className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm transition-all ${
-                      isUnavailable
-                        ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border border-dashed border-gray-300 dark:border-gray-600'
-                        : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300'
-                    }`}
-                  >
+                                <Tooltip
+                                  key={id}
+                                  content={getUnavailableReasonText(
+                                    availability.reason,
+                                    availability.maxImages
+                                  )}
+                                  show={isUnavailable}
+                                >
+                                  <div
+                                    className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm transition-all ${
+                                      isUnavailable
+                                        ? 'bg-gray-200/80 dark:bg-gray-700/50 text-gray-400 dark:text-gray-500 border-2 border-dashed border-gray-400 dark:border-gray-500 opacity-70'
+                                        : 'bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 border-2 border-indigo-300 dark:border-indigo-600'
+                                    }`}
+                                  >
                     <span className={isUnavailable ? 'line-through' : ''}>
                       {model?.name}
                     </span>
@@ -453,14 +454,14 @@ export const ModelDrawer: FC<ModelDrawerProps> = ({
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => handleCountChange(id, count - 1)}
-                          className="w-5 h-5 flex items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-600 hover:bg-zinc-300 dark:hover:bg-zinc-500"
+                          className="w-5 h-5 flex items-center justify-center rounded-full bg-indigo-200 dark:bg-indigo-700 hover:bg-indigo-300 dark:hover:bg-indigo-600 text-indigo-700 dark:text-indigo-200 font-bold transition-colors"
                         >
                           -
                         </button>
-                        <span className="text-xs font-medium">{count}</span>
+                        <span className="text-xs font-bold text-indigo-700 dark:text-indigo-200 min-w-[1rem] text-center">{count}</span>
                         <button
                           onClick={() => handleCountChange(id, count + 1)}
-                          className="w-5 h-5 flex items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-600 hover:bg-zinc-300 dark:hover:bg-zinc-500"
+                          className="w-5 h-5 flex items-center justify-center rounded-full bg-indigo-200 dark:bg-indigo-700 hover:bg-indigo-300 dark:hover:bg-indigo-600 text-indigo-700 dark:text-indigo-200 font-bold transition-colors"
                         >
                           +
                         </button>
@@ -468,10 +469,10 @@ export const ModelDrawer: FC<ModelDrawerProps> = ({
                     )}
                     <button
                       onClick={() => handleRemoveModel(id)}
-                      className={`ml-1 hover:text-zinc-600 dark:hover:text-zinc-400 ${
+                      className={`ml-1 transition-colors ${
                         isUnavailable
-                          ? 'text-gray-400 dark:text-gray-500'
-                          : 'text-zinc-400 dark:text-zinc-500'
+                          ? 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                          : 'text-indigo-400 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-200'
                       }`}
                     >
                       <XMarkIcon className="h-4 w-4" />
@@ -541,21 +542,27 @@ export const ModelDrawer: FC<ModelDrawerProps> = ({
 
                     return (
                       <div key={model.id}>
-                        <div
-                          onClick={() => handleModelSelect(model.id)}
-                          className={`w-full p-3 rounded-lg text-left transition-colors ${
-                            isUnavailable
-                              ? 'cursor-not-allowed opacity-60 bg-gray-50 dark:bg-gray-800/50 border border-dashed border-gray-300 dark:border-gray-700'
-                              : isSelected
-                                ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 cursor-pointer'
-                                : 'hover:bg-gray-50 dark:hover:bg-gray-800 border-transparent cursor-pointer'
-                          } border`}
+                                        <div
+                                          onClick={() => handleModelSelect(model.id)}
+                                          className={`w-full p-3 rounded-lg text-left transition-all ${
+                                            isUnavailable
+                                              ? 'cursor-not-allowed opacity-50 bg-gray-100 dark:bg-gray-800/30 border-2 border-dashed border-gray-400 dark:border-gray-600'
+                                              : isSelected
+                                                ? 'bg-indigo-50 dark:bg-indigo-900/40 border-2 border-indigo-400 dark:border-indigo-500 ring-2 ring-indigo-200 dark:ring-indigo-800 cursor-pointer shadow-sm'
+                                                : 'hover:bg-gray-100 dark:hover:bg-gray-800 border-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600 cursor-pointer'
+                                          }`}
                         >
                           <div className="flex justify-between items-start">
                             <div className="flex-1">
                               <div className="flex items-center gap-2 flex-wrap">
+                                {/* 选中状态指示器 */}
+                                {isSelected && !isUnavailable && (
+                                  <span className="flex items-center justify-center w-5 h-5 rounded-full bg-indigo-500 dark:bg-indigo-500 text-white flex-shrink-0">
+                                    <CheckIcon className="w-3 h-3 stroke-[3]" />
+                                  </span>
+                                )}
                                 <h3
-                                  className={`font-medium ${isUnavailable ? 'text-gray-500 dark:text-gray-500' : 'text-gray-900 dark:text-gray-100'}`}
+                                  className={`font-medium ${isUnavailable ? 'text-gray-400 dark:text-gray-500 line-through' : isSelected ? 'text-indigo-700 dark:text-indigo-300' : 'text-gray-900 dark:text-gray-100'}`}
                                 >
                                   {model.name}
                                 </h3>
@@ -617,18 +624,18 @@ export const ModelDrawer: FC<ModelDrawerProps> = ({
                                   onClick={e =>
                                     handleCountButtonClick(e, model.id, -1)
                                   }
-                                  className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600"
+                                  className="w-7 h-7 flex items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-800 hover:bg-indigo-200 dark:hover:bg-indigo-700 text-indigo-600 dark:text-indigo-300 font-bold transition-colors"
                                 >
                                   -
                                 </button>
-                                <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                <span className="text-sm font-bold text-indigo-600 dark:text-indigo-300 min-w-[1.5rem] text-center">
                                   {selectedCount}
                                 </span>
                                 <button
                                   onClick={e =>
                                     handleCountButtonClick(e, model.id, 1)
                                   }
-                                  className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600"
+                                  className="w-7 h-7 flex items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-800 hover:bg-indigo-200 dark:hover:bg-indigo-700 text-indigo-600 dark:text-indigo-300 font-bold transition-colors"
                                 >
                                   +
                                 </button>
@@ -736,10 +743,10 @@ export const ModelDrawer: FC<ModelDrawerProps> = ({
                     <button
                       key={category}
                       onClick={() => handleCategoryChange(category)}
-                      className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
+                      className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap font-medium transition-all ${
                         selectedCategory === category
-                          ? 'bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-200'
-                          : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                          ? 'bg-indigo-500 text-white dark:bg-indigo-600 dark:text-white shadow-md'
+                          : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
                       }`}
                     >
                       {category === DEFAULT_CATEGORY
